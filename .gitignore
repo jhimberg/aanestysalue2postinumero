@@ -1,3 +1,10 @@
+# 
+*.zip
+PV.aanet.postinumero.rds
+map.pono.aanestysalue.pds
+presidentinvaalien.aanet.rds
+
+
 # History files
 .Rhistory
 .Rapp.history
