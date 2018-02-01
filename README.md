@@ -1,0 +1,2 @@
+# aanestysalue2postinumero
+Äänestysalueittainen data postinumeroalueille avoimen rakennustiedon avulla
