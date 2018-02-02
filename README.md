@@ -13,6 +13,19 @@ Käyttö: `PV2018.demo.R`: toteuttaa koko prosessin ajamalla R-skriptejä ja hak
 
 Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `ggplot2`
 
+# Painotus
+
+Painotus on syntyy dataframeen `map.pono.aanestysalue`joka tallentuu myös tiedostoon `map.pono.aanestysalue.rds`
+
+* kunta: kuntanumero
+* aanestysalue.nro: kunta + aanestysalue.nro on äänestysalueen uniikki tunnus
+* postinumero                  
+* rakennukset.aanestysalue.pono: asuin/toimistorakennukset äänestysalueen (kunta+aanestysalue.nro ja postinumeron leikkauksessa
+* rakennukset.aanestysalue: äänestysalueen (kunta+aanestysalue.nro) asuin/toimistorakennusten määrä 
+* rakennukset.pono: postinumeroalueen asuin/toimistorakennusten määrä
+* w.aanestysalue2pono: rakennukset.aanestysalue.pono / rakennukset.aanestysalue
+* w.pono2aanestysalue: rakennukset.aanestysalue.pono / rakennukset.pono          
+
 # Valmiiksi ladatut aineistot
 
 `paavo2018.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston: https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html. 
