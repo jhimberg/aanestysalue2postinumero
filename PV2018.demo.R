@@ -43,4 +43,4 @@ left_join(PV.aanet.postinumeroittain %>%
             spread(., ehdokas, aanten.osuus), 
           paavo.2018, 
           by="postinumero") %>% 
-  ggplot(aes(y=Haavisto, x=hr_ktu, size=ko_ika18y))+geom_point()
+  ggplot(aes(y=Haavisto, x=hr_ktu, size=ko_ika18y, label=postinumero))+geom_text()

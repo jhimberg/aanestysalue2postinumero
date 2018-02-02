@@ -7,17 +7,21 @@ rakennukset <- readRDS(rakennukset, file="rakennukset.rds")
 
 tilastointipostinumerot.2018 <- readRDS(file="tilastointipostinumerot.2018.rds")
 
-map.pono.aanestysalue <-count(rakennukset %>% 
-                            filter(kayttotarkoitus == "asunto/toimitila" & !is.na(aanestysalue.nro) & 
-                                     postinumero %in% tilastointipostinumerot.2018), kunta, aanestysalue.nro, postinumero) %>% 
+# huom: ääsestysalueen uniikki tunnus äänestysalueen numero _ja_ kuntanumero  
+map.pono.aanestysalue <-group_by(rakennukset %>% 
+                                filter(kayttotarkoitus == "asunto/toimitila" & !is.na(aanestysalue.nro) & 
+                                         postinumero %in% tilastointipostinumerot.2018), 
+                              kunta, aanestysalue.nro, postinumero) %>% 
+  summarise(rakennukset.aanestysalue.pono=n()) %>% 
+  ungroup %>%
   group_by(kunta, aanestysalue.nro) %>% 
-  mutate(n.aanestysalue=sum(n)) %>% 
+  mutate(rakennukset.aanestysalue=sum(rakennukset.aanestysalue.pono)) %>% 
   ungroup %>% 
   group_by(postinumero) %>% 
-  mutate(n.pono=sum(n)) %>% 
+  mutate(rakennukset.pono = sum(rakennukset.aanestysalue.pono)) %>% 
   ungroup %>% 
-  mutate(w.aanestysalue2pono = n/n.aanestysalue, 
-         w.pono2aanestysalue= n/n.pono) 
+  mutate(w.aanestysalue2pono = rakennukset.aanestysalue.pono/rakennukset.aanestysalue, 
+         w.pono2aanestysalue= rakennukset.aanestysalue.pono/rakennukset.pono)
 
 saveRDS(map.pono.aanestysalue, file="map.pono.aanestysalue.rds")
 
