@@ -25,3 +25,7 @@ map.pono.aanestysalue <-group_by(rakennukset %>%
 
 saveRDS(map.pono.aanestysalue, file="map.pono.aanestysalue.rds")
 
+# tekstinä
+#write.table(map.pono.aanestysalue, row.names = FALSE, file="map.pono.aanestysalue.csv", sep=";")
+#R.utils::gzip("map.pono.aanestysalue.csv", overwrite=TRUE)
+
