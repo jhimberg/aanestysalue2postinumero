@@ -16,6 +16,7 @@ Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `ggplo
 # Painotus
 
 Painotus on syntyy dataframeen `map.pono.aanestysalue`joka tallentuu myös tiedostoon `map.pono.aanestysalue.rds`
+(`map.pono.aanestysalue.csv.gz` sisältää valmiin esimerkin tuloksesta.)
 
 * kunta: kuntanumero
 * aanestysalue.nro: kunta + aanestysalue.nro on äänestysalueen uniikki tunnus
