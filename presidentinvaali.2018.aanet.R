@@ -1,9 +1,12 @@
 #### Presidentinvaalien äänet postinumeroille 
 
-download.file("http://tulospalvelu.vaalit.fi/TPV-2018_1/tpv-2018_1_ehd_maa.csv.zip", "tpv-2018_1_ehd_maa.csv.zip")
+download.file("http://tulospalvelu.vaalit.fi/TPV-2018_1/tpv-2018_1_ehd_maa.csv.zip", 
+              "tpv-2018_1_ehd_maa.csv.zip")
 
-PV<-read_csv2("tpv-2018_1_ehd_maa.csv.zip", col_names=FALSE, trim_ws=TRUE, 
-              col_types=paste0(rep("c",46),collapse="")) %>% 
+PV <- read_csv2("tpv-2018_1_ehd_maa.csv.zip", 
+                col_names=FALSE, trim_ws=TRUE, 
+                col_types=paste0(rep("c",46),
+                                 collapse="")) %>% 
   mutate_if(is.character, funs(iconv(., from="latin1", to="utf-8"))) %>% 
   select(kunta=X3,
          aluejako=X4, 
@@ -16,7 +19,7 @@ PV<-read_csv2("tpv-2018_1_ehd_maa.csv.zip", col_names=FALSE, trim_ws=TRUE,
          aanten.osuus=as.numeric(aanten.osuus)/10) %>% 
   filter(!(aluejako %in% c("M","V"))) %>%
   mutate(aluejako=plyr::mapvalues(aluejako, c("K","A"), c("kunta", "äänestysalue")), 
-         alue=ifelse(aluejako=="kunta", kunta, alue))
+         alue=ifelse(aluejako == "kunta", kunta, alue))
 
 saveRDS(PV, file="presidentinvaalien.aanet.rds")
 

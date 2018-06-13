@@ -7,6 +7,8 @@ R:llä toteutettu heuristiikka jolla voi arvioida äänten määriä postinumero
 
 Rakennustiedoissa on rakennuksia postinumeroilla joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
 
+Huom: Rakennustietokannan lähdedata vaihtuu: skriptin avoimen datan hakuosoitetta täytyy muuttaa tarvittaessa
+
 # Käyttö
 
 Käyttö: `PV2018.demo.R`: toteuttaa koko prosessin ajamalla R-skriptejä ja hakee paitsi rakennustiedot myös 2018 presidentinvaalien tulokset (http://tulospalvelu.vaalit.fi/TPV-2018_1/en/ladattavat_tiedostot.html), joita käytetään esimerkkinä. 
