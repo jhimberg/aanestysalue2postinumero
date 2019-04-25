@@ -23,12 +23,7 @@ Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `ggplo
 
 # Painotus
 
-<<<<<<< HEAD
 Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tiedostoon `aanestysalue2postinumero.rds`
-=======
-Painotus on syntyy dataframeen `map.pono.aanestysalue`joka tallentuu myös tiedostoon `map.pono.aanestysalue.rds`
-(`map.pono.aanestysalue.csv.gz` sisältää valmiin esimerkin tuloksesta.)
->>>>>>> 330428783468df9b960c0f6da8895de67d630d4f
 
 * kunta: kuntanumero
 * aanestysalue.nro: kunta + aanestysalue.nro on äänestysalueen uniikki tunnus
