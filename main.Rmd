@@ -2,7 +2,8 @@
 title: "EKV2019_demo"
 author: "Johan Himberg"
 date: "4/23/2019"
-output: html_document
+output:
+  html_document: default
 ---
 
 ```{r setup, include = FALSE}
