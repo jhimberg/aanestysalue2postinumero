@@ -8,6 +8,8 @@ https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi joi
 
 Rakennustiedoissa on rakennuksia postinumeroilla, joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
 
+Huom: Rakennustietokannan lähdedata vaihtuu: skriptin avoimen datan hakuosoitetta täytyy muuttaa tarvittaessa
+
 # Käyttö
 
 `main.Rmd`: toteuttaa koko prosessin ajamalla R-skriptejä ja hakee paitsi rakennustiedot myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. 
@@ -21,7 +23,12 @@ Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `ggplo
 
 # Painotus
 
+<<<<<<< HEAD
 Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tiedostoon `aanestysalue2postinumero.rds`
+=======
+Painotus on syntyy dataframeen `map.pono.aanestysalue`joka tallentuu myös tiedostoon `map.pono.aanestysalue.rds`
+(`map.pono.aanestysalue.csv.gz` sisältää valmiin esimerkin tuloksesta.)
+>>>>>>> 330428783468df9b960c0f6da8895de67d630d4f
 
 * kunta: kuntanumero
 * aanestysalue.nro: kunta + aanestysalue.nro on äänestysalueen uniikki tunnus

@@ -1,5 +1,6 @@
 ## Hae rakennustiedot
 
+<<<<<<< HEAD
 print("Lataa rakennusdata...")
 
 "data/suomi_osoitteet_2019-02-19.zip"
@@ -41,4 +42,3 @@ rakennukset <- mutate(rakennukset,
 )
 
 saveRDS(rakennukset, file = "data/rakennukset.rds")
-
