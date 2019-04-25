@@ -12,7 +12,7 @@ Huom: Rakennustietokannan lähdedata vaihtuu: skriptin avoimen datan hakuosoitet
 
 # Käyttö
 
-`main.Rmd`: toteuttaa koko prosessin ajamalla R-skriptejä ja hakee paitsi rakennustiedot myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. 
+`main.Rmd`: toteuttaa koko prosessin R-skripteillä ja hakee, paitsi rakennustiedot, myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. 
 
 `data.R`: skripti joka hakee datat ja muodostaa heuristiikassa tarvittavat painotukset äänestysalueelta postinumeroille ja päin vastoin. Kolme vaihetta jotka tallentavat tuloksensa `data` hakemistooin jatkokäyttöä varten
   - `rakennukset.R`: hakee ja käsittelee rakennustiedot 
@@ -36,8 +36,8 @@ Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tied
 
 # Valmiiksi ladatut aineistot
 
-Hakemistossa `map_and_names` on valmiina 
-- `paavodata.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston vuosi 2018 ja 2019. (https://www.stat.fi/tup/paavo/index_en.html). Paavo-data ja Postinumeroaluerajat, Tilastokeskus. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi)
-https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html käsiteltynä tibbleksi, ks. 
-- `kuntano2kuntanimi.2018.rds` sisältää kuntanumeroinnin
+Hakemistossa `map_and_names` on valmiina erilaisia kartta, demografia ja nimitietoja.
+- `paavodata.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston vuosi 2018 ja 2019. (https://www.stat.fi/tup/paavo/index_en.html). Paavo-data ja Postinumeroaluerajat, Tilastokeskus. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html käsiteltynä tibbleksi
+- `kuntano2kuntanimi.2018.rds`  sisältää kuntanumeroinnin
 - `statfi_reduced_ziparea_map_2019.rds` postimumeroaluekartta 
+- `EKV2019_puoluekoodaus.csv` niputtaa muutamia yhteislistoja joilla on eri vaalipiireissä eri nimi, esim. Liike NYT 

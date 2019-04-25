@@ -5,6 +5,8 @@ print("Hae eduskuntavaalien tulokset...")
 download.file("https://tulospalvelu.vaalit.fi/EKV-2019/ekv-2019_ehd_maa.csv.zip", 
               "data/ekv.2019.csv.zip")
 
+# Ks. https://tulospalvelu.vaalit.fi/EKV-2019/ohje/Vaalien_tulostiedostojen_kuvaus_EKV-EPV-2019_FI.pdf
+
 EKV <-
   read_csv2(
     "data/ekv.2019.csv.zip",
@@ -35,7 +37,7 @@ EKV <-
     aanet_ennakko = as.integer(X33),
     aanet_vaalipaiva = as.integer(X34),
     aanet_yhteensa = as.integer(X35),
-    aanten_osuus = as.integer(X38),
+    aanten_osuus = as.integer(X38), # Prosenttia alueen hyväksytyistä äänistä.
     valittu = plyr::mapvalues(X39, c("1","2","3","4"), c(T,F,F,F))
   ) %>%
   filter(!(aluejako %in% c("M", "V"))) %>%
