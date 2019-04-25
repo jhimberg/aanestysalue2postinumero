@@ -1,10 +1,6 @@
 # 
-*.zip
-PV.aanet.postinumero.rds
-map.pono.aanestysalue.rds
-presidentinvaalien.aanet.rds
-rakennukset.rds
-
+data/**
+misc/*
 
 # History files
 .Rhistory

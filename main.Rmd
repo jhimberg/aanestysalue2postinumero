@@ -1,0 +1,199 @@
+---
+title: "EKV2019_demo"
+author: "Johan Himberg"
+date: "4/23/2019"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Vuoden 2019 eduskuntavaalien tuloksien estimointi postinumeroalueittain 
+
+## Initialisoi, lataa ja lue datat
+
+Skripti ottaa käyttöön tarvittavia kirjastoja ja funktioita. Lataa tarvittaessa rakennus- ja vaalidatan (http://www.avoindata.fi, http://tulospalvelu.vaalit.fi). Jos tiedostot jo löytyvät, niitä ei haeta uudestaan.  
+Datat tallennetaan hakemistoon `data`. Tilastointipostinumerot tallennetaan aliskiptissä `aanestysalue2postinumero.R`:ssä ja niissä on mukana alueiden nimet 
+Äänestystulokset tarvitaan äänestysalueittain (datassa ne ovat myös summattuna kunnittain jne)
+
+Seuraava vaihe kestää ensimmäisellä kerralla hetken.
+```{r load_data}
+source("data.R") # pääskripti
+
+postinumerot <- readRDS(file = "data/tilastointipostinumerot.rds")
+eduskuntavaalit <- readRDS(file = "data/EKV2019_ehdokkaat.rds") %>% 
+  filter(aluejako == "äänestysalue") %>% 
+  rename(aanestysalue.nro = alue)
+
+print("Data ladattu")
+```
+
+## Ehdokkaiden perustiedot: Yhdistetään valitsijayhdistyksiä ja yhteislistoja
+
+```{r ehdokkaat}
+ehdokkaat <- eduskuntavaalit %>% 
+  select(vaalipiiri, 
+         puolue_lyhenne_alkuperainen, 
+         puolue, 
+         ehdokasnumero, 
+         etunimi, 
+         sukunimi, 
+         sukupuoli, 
+         ika, 
+         kieli, 
+         kotikunta_nimi) %>% 
+  distinct() %>% 
+  mutate(puolue = ifelse(grepl("^X", puolue) | puolue %in% c("ASYL","REF","AFÅ","RLI", "FÅ"), "MUUT", puolue))
+```
+
+## Summaa ehdokkaiden arvioitu äänisaalis postinumeroalueilla
+
+Seuraavaksi varsinainen painotus, jossa ehdokkaan äänimäärät äänestysalueilla kerrotaan painotuskertoimilla ja 
+summataan postinumeroalueille:
+
+```{r painotus}
+
+aluekertoimet <- readRDS(file="data/aanestysalue2postinumero.rds") 
+
+aanet <- 
+  left_join(eduskuntavaalit, 
+            aluekertoimet, 
+            by=c("kunta", "aanestysalue.nro")) %>% 
+  mutate(aanet_yhteensa = aanet_yhteensa * w.aanestysalue2pono) %>% 
+  group_by(vaalipiiri, ehdokasnumero, postinumero) %>% 
+  summarise(ehdokkaan_aanet_postinumeroalueella = sum(aanet_yhteensa, na.rm=TRUE)) %>% 
+  ungroup %>% 
+  group_by(postinumero) %>%
+  mutate(postinumeroalueen_kokonaisaanimaara = sum(ehdokkaan_aanet_postinumeroalueella, na.rm = TRUE)) %>%
+  ungroup
+
+saveRDS(aanet, file = "data/EKV2019_aanet_postinumeroittain.rds")
+```
+
+## Esimerkki postinumeroalueen äänimäärien estimoinnista
+
+```{r }
+# Esimerkki kertoimista: 
+posti <- "00980"
+filter(aluekertoimet, postinumero == posti) %>% 
+  ggplot(aes(x=aanestysalue.nimi.fi, y=w.aanestysalue2pono)) + 
+  geom_bar(stat="identity") + 
+  coord_flip() + 
+  ggtitle(paste0(posti, " äänien lähdealueet"))
+
+```
+
+
+Alueelle 00980 otetaan lähes kaikki äänet äänestysalueilta Vuosaari A, B ja E, ja osa äänistä muutamalta muulta äänestysalueelta. Painot saadaan rakennusten määrien perustella (Ks. `aanestysalue2postinumero.R`). 
+Painotuksen voi laskea myös toiseen suuntaan, jos haluaa jakaa kappalemääriä tai tehdä painotettuja keskiarvoja postinumeroittain annetusta datasta äänestysalueille.
+
+## Puolueiden esitmoitu äänisaalis postinumeroalueittain
+
+```{r puolueet}
+kokonaisaanimaara_postinumeroittain <- left_join(aanet, ehdokkaat, by = c("ehdokasnumero", "vaalipiiri")) %>% 
+  select(postinumero, aanet = ehdokkaan_aanet_postinumeroalueella) %>% 
+  group_by(postinumero) %>% 
+  summarise(KAIKKI = sum(aanet, na.rm=TRUE)) 
+
+puolueiden_aanet_postinumeroittain <- left_join(aanet, ehdokkaat, by = c("ehdokasnumero", "vaalipiiri")) %>% 
+  select(postinumero, aanet = ehdokkaan_aanet_postinumeroalueella, puolue) %>% 
+  group_by(postinumero, puolue) %>% 
+  summarise(aanet = sum(aanet, na.rm=TRUE)) %>% 
+  left_join(., kokonaisaanimaara_postinumeroittain, by="postinumero") %>% 
+  spread(puolue, aanet, fill=0)
+
+DT::datatable(puolueiden_aanet_postinumeroittain %>% 
+                mutate_at(., vars(EOP:VIHR), .funs = ~round((./KAIKKI)*100, 1)) %>% 
+                mutate_at(., vars(EOP:VIHR), .funs = ~paste0(., "%")) %>% 
+                mutate_at(., vars(KAIKKI), round) %>% 
+                left_join(postinumerot, by="postinumero") %>%
+                mutate(kunta = kuntano2nimi(kuntano)) %>%  select(-kuntano) %>%
+                order_columns(first_names = c("kunta", "postinumero", "nimi")),
+              colnames = c('Ääniä' = 'KAIKKI'),
+              caption = "Arvio äänistä puolueittain ja postinumeroalueittain",
+              rownames=FALSE)
+```
+
+Taulukossa sarake "KAIKKI" on postinumeroalueen estimoitu äänimäärä, puoluetunnuksilla kunkin puolueen estimoitu äänimäärä postinumeroalueella 
+
+## Yhdistetään äänestulos postinumeroalueiden Paavo-dataan
+
+Tilastokeskuksen Paavo-data (https://www.stat.fi/tup/paavo/index_en.html) on haettu valmiiksi vuosilta 2018-2019 (ks. https://github.com/jhimberg/paavodata). 
+Datassa on myös laskettuna aggregaatteja kolmen ja kahden ensimmäinsen numeron määrittämille suuremmille alueille `pono_level`, mutta tässä otetaan postinumeroalueet (kaikki viisi numeroa) Paavo-datasta (versio 2019) ja yhdistetään se puolueiden äänimääriin.
+
+Taulukossa Paavo-datan muuttujien koodeja vastaavat nimet löytyvät `paavo$vars` Ks. tarkemmin https://github.com/jhimberg/paavodata.  
+
+
+```{r lataa_paavo}
+
+paavo <- readRDS("map_and_names/paavodata.rds")
+paavodata <- paavo$data %>% filter(vuosi == 2019, pono_level == 5) %>% 
+  rename(postinumero=pono) %>% 
+  select(-pono_level, -vuosi)
+
+aanet_ja_paavodata <- left_join(paavodata, 
+                                puolueiden_aanet_postinumeroittain, 
+                                by = "postinumero")
+print("Paavo-data ok")
+```
+
+### Paavo datan muuttujat
+
+```{r paavo_muuttujat}
+DT::datatable(paavo$vars, rownames=FALSE)
+```
+`_osuus` päätteiset muuttujat eivät ole alkuperäisiä: niihin on yritetty valmiiksi laskea osuuksia väestöstä , esim. `ko_yl_kork_osuus` on laskettu ko_yl_kork_osuus / ko_ika_18y. Jakava löytyy sarakkeesta `ratio.base`. Kun Paavo-datan vuosiversioluvusta vähentää `paavo.vuosi.offset` pitäisi saada vuosi jonka lopusta data vasrsinaisesti on.  
+
+### Esimerkki 
+
+Helsingin postinumeroalueet (vaaditaan yli 100 äänestäjää)) 
+
+```{r scatterplot}
+postinumero_pattern <- "^00" # Helsinki
+paavo_selittaja <- "hr_hy_tul_osuus"
+selitettava <- "KOK / KAIKKI"
+alueen_minimiaanimaara <- 100
+outlier <- c()
+#outlier <- c("02150")
+
+ggplot(
+  filter(aanet_ja_paavodata, 
+         grepl(postinumero_pattern, postinumero) & KAIKKI >= alueen_minimiaanimaara & !(postinumero %in% outlier )), 
+  aes_string(y = selitettava, 
+      x = paavo_selittaja, 
+      label = "postinumero", 
+      weight = "KAIKKI" 
+      #size = "KAIKKI"
+      )) +
+  geom_text(size=3) + 
+  geom_smooth(method = "gam", formula = y ~ s(x, bs="cs", k = 3)) + 
+  xlab(paste(filter(paavo$vars, koodi == paavo_selittaja) %>% pull(nimi), "\n(aluesuodatus=", postinumero_pattern, ")"))
+```
+
+## Esimerkki 2
+```{r kartta}
+source("map_and_names/paavo_functions.R")
+
+df <- transmute(aanet_ja_paavodata, 
+                pono = postinumero, 
+                KOK_osuus=KOK/KAIKKI,
+                tooltip = paste0(postinumero, " ", 
+                                toupper=kuntano2nimi(kuntano), 
+                                "\n", nimi, "\n", 
+                                as.numeric(round(KOK_osuus*100)), "%")) %>%
+  filter(grepl("^00", pono))
+
+
+map_fi_zipcode_interactive(df,
+                           title_label = "KOK äänten osuus alueella 00",
+                           map = "2019",
+                           colorscale = scale_fill_distiller, 
+                           type = "seq", 
+                           palette="YlOrRd",
+                           direction = 1) %>% 
+  girafe(ggobj = .) %>% 
+  girafe_options(x=., opts_zoom(min = .5, max = 5))
+
+```
+

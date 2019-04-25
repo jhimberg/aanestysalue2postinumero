@@ -1,21 +1,27 @@
 # aanestysalue2postinumero
-Äänestysalueittainen data postinumeroalueille avoimen rakennustiedon avulla.
+Äänestysalueittainen data postinumeroalueille avoimen rakennustiedon avulla. Postinumeroittaisen vaalien tulosdatan visualisointia
 
 # Heuristiikka
 
-R:llä toteutettu heuristiikka jolla voi arvioida äänten määriä postinumeroalueilla. Haetaan rakennustiedot https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi joissa rakennuksista on tiedossa sekä postinumero että äänestysalue. Rajoitutaan asuin- ja toimistorakennuksiin. Avoimessa datassa ei ole tämän tarkempaa tietoa rakennuksien laadusta tai koosta. Lasketaan kullekin Paavo-aineiston tilastointipostinumerolle osuudet sen rakennuksista eri äänestysalueilla. Näillä voi laskea postinumeroalueen äänimäärän äänestysalueiden painotettuna summana. 
+R:llä toteutettu heuristiikka jolla voi arvioida äänten määriä postinumeroalueilla. Haetaan rakennustiedot 
+https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi joissa rakennuksista on tiedossa sekä postinumero että äänestysalue. Rajoitutaan asuin- ja toimistorakennuksiin. Avoimessa datassa ei ole tämän tarkempaa tietoa rakennuksien laadusta tai koosta. Lasketaan kullekin Paavo-aineiston tilastointipostinumerolle osuudet sen rakennuksista eri äänestysalueilla. Näillä voi laskea postinumeroalueen äänimäärän äänestysalueiden painotettuna summana. 
 
-Rakennustiedoissa on rakennuksia postinumeroilla joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
+Rakennustiedoissa on rakennuksia postinumeroilla, joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
 
 # Käyttö
 
-Käyttö: `PV2018.demo.R`: toteuttaa koko prosessin ajamalla R-skriptejä ja hakee paitsi rakennustiedot myös 2018 presidentinvaalien tulokset (http://tulospalvelu.vaalit.fi/TPV-2018_1/en/ladattavat_tiedostot.html), joita käytetään esimerkkinä. 
+`main.Rmd`: toteuttaa koko prosessin ajamalla R-skriptejä ja hakee paitsi rakennustiedot myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. 
 
-Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `ggplot2`
+`data.R`: skripti joka hakee datat ja muodostaa heuristiikassa tarvittavat painotukset äänestysalueelta postinumeroille ja päin vastoin. Kolme vaihetta jotka tallentavat tuloksensa `data` hakemistooin jatkokäyttöä varten
+  - `rakennukset.R`: hakee ja käsittelee rakennustiedot 
+  - `aanestysalue2postinumero.R`: muodostaa painotukset  
+  - `EKV2019_aanet.R`: hakee käsittelee 2019 eduskuntavaalien tulokset
+
+Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `ggplot2`, `DT`, `stringr` (ja `ggiraph`) 
 
 # Painotus
 
-Painotus on syntyy dataframeen `map.pono.aanestysalue`joka tallentuu myös tiedostoon `map.pono.aanestysalue.rds`
+Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tiedostoon `aanestysalue2postinumero.rds`
 
 * kunta: kuntanumero
 * aanestysalue.nro: kunta + aanestysalue.nro on äänestysalueen uniikki tunnus
@@ -28,6 +34,8 @@ Painotus on syntyy dataframeen `map.pono.aanestysalue`joka tallentuu myös tiedo
 
 # Valmiiksi ladatut aineistot
 
-`paavo2018.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston: https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html. 
-
-`kuntano2kuntanimi.2018.rds` sisältää kuntanumeroinnin ja `tilastointipostinumerot.2018.rds` Paavo-aineistossa käytössä olevat postinumerot, joilla olevia rakennuksia käytetään. 
+Hakemistossa `map_and_names` on valmiina 
+- `paavodata.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston vuosi 2018 ja 2019. (https://www.stat.fi/tup/paavo/index_en.html). Paavo-data ja Postinumeroaluerajat, Tilastokeskus. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi)
+https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html käsiteltynä tibbleksi, ks. 
+- `kuntano2kuntanimi.2018.rds` sisältää kuntanumeroinnin
+- `statfi_reduced_ziparea_map_2019.rds` postimumeroaluekartta 
