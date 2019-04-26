@@ -175,21 +175,21 @@ ggplot(
 ```
 
 ## Esimerkki 2
-```{r kartta}
+```{r kartta_kok}
 source("map_and_names/paavo_functions.R")
 
 df <- transmute(aanet_ja_paavodata, 
                 pono = postinumero, 
-                VIHR_osuus=VIHR/KAIKKI,
+                KOK_osuus=KOK/KAIKKI,
                 tooltip = paste0(postinumero, " ", 
                                 toupper=kuntano2nimi(kuntano), 
                                 "\n", nimi, "\n", 
-                                as.numeric(round(VIHR_osuus*100)), "%")) %>%
-  filter(grepl("^9[4-9]", pono))
+                                as.numeric(round(KOK_osuus * 100)), "%")) %>%
+  filter(grepl("^00", pono))
 
 
 map_fi_zipcode_interactive(df,
-                           title_label = "VIHR osuus alueella ^9[4-9]",
+                           title_label = "KOK osuus alueella ^00",
                            map = "2019",
                            colorscale = scale_fill_distiller, 
                            type = "seq", 
@@ -200,3 +200,29 @@ map_fi_zipcode_interactive(df,
 
 ```
 
+```{r kartta_kok}
+source("map_and_names/paavo_functions.R")
+
+
+
+df <- transmute(aanet_ja_paavodata, 
+                pono = postinumero, 
+                hr_hy_tul_osuus,
+                tooltip = paste0(postinumero, " ", 
+                                toupper=kuntano2nimi(kuntano), 
+                                "\n", nimi, "\n", 
+                                as.numeric(round(hr_hy_tul_osuus * 100)), "%")) %>%
+  filter(grepl("^00", pono))
+
+
+map_fi_zipcode_interactive(df,
+                           title_label = "Ylimpään tuloluokaan kuuluvien asukkaiden osuus",
+                           map = "2019",
+                           colorscale = scale_fill_distiller, 
+                           type = "seq", 
+                           palette="YlOrRd",
+                           direction = 1) %>% 
+  girafe(ggobj = .) %>% 
+  girafe_options(x=., opts_zoom(min = .5, max = 5))
+
+```
