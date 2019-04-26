@@ -19,7 +19,7 @@ Huom: Rakennustietokannan lähdedata vaihtuu: skriptin avoimen datan hakuosoitet
   - `aanestysalue2postinumero.R`: muodostaa painotukset  
   - `EKV2019_aanet.R`: hakee käsittelee 2019 eduskuntavaalien tulokset
 
-Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `ggplot2`, `DT`, `stringr` (ja `ggiraph`) 
+Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa.
 
 # Painotus
 
@@ -37,7 +37,7 @@ Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tied
 # Valmiiksi ladatut aineistot
 
 Hakemistossa `map_and_names` on valmiina erilaisia kartta, demografia ja nimitietoja.
-- `paavodata.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston vuosi 2018 ja 2019. (https://www.stat.fi/tup/paavo/index_en.html). Paavo-data ja Postinumeroaluerajat, Tilastokeskus. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html käsiteltynä tibbleksi
-- `kuntano2kuntanimi.2018.rds`  sisältää kuntanumeroinnin
-- `statfi_reduced_ziparea_map_2019.rds` postimumeroaluekartta 
+- `paavodata.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston vuosi 2018 ja 2019 käsiteltynä tibbleksi. Paavo-data ja Postinumeroaluerajat, Tilastokeskus. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html 
+- `kuntano2kuntanimi.2018.rds`  sisältää kuntanumeroinnin ja kuntanimen mäppäyksen
+- `statfi_reduced_ziparea_map_2019.rds` postimumeroaluekartta redusoituna. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) ja redusoitu, ks. https://github.com/jhimberg/paavodata
 - `EKV2019_puoluekoodaus.csv` niputtaa muutamia yhteislistoja joilla on eri vaalipiireissä eri nimi, esim. Liike NYT 

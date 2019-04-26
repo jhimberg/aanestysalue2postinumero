@@ -8,6 +8,7 @@ output:
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(DT)
 ```
 
 ## Vuoden 2019 eduskuntavaalien tuloksien estimointi postinumeroalueittain 
@@ -20,6 +21,7 @@ Datat tallennetaan hakemistoon `data`. Tilastointipostinumerot tallennetaan alis
 
 Seuraava vaihe kestää ensimmäisellä kerralla hetken.
 ```{r load_data}
+
 source("data.R") # pääskripti
 
 postinumerot <- readRDS(file = "data/tilastointipostinumerot.rds")
@@ -178,16 +180,16 @@ source("map_and_names/paavo_functions.R")
 
 df <- transmute(aanet_ja_paavodata, 
                 pono = postinumero, 
-                KOK_osuus=KOK/KAIKKI,
+                VIHR_osuus=VIHR/KAIKKI,
                 tooltip = paste0(postinumero, " ", 
                                 toupper=kuntano2nimi(kuntano), 
                                 "\n", nimi, "\n", 
-                                as.numeric(round(KOK_osuus*100)), "%")) %>%
-  filter(grepl("^00", pono))
+                                as.numeric(round(VIHR_osuus*100)), "%")) %>%
+  filter(grepl("^9[4-9]", pono))
 
 
 map_fi_zipcode_interactive(df,
-                           title_label = "KOK äänten osuus alueella 00",
+                           title_label = "VIHR osuus alueella ^9[4-9]",
                            map = "2019",
                            colorscale = scale_fill_distiller, 
                            type = "seq", 
