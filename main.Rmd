@@ -180,7 +180,7 @@ source("map_and_names/paavo_functions.R")
 
 df <- transmute(aanet_ja_paavodata, 
                 pono = postinumero, 
-                KOK_osuus=KOK/KAIKKI,
+                KOK_osuus = KOK/KAIKKI,
                 tooltip = paste0(postinumero, " ", 
                                 toupper=kuntano2nimi(kuntano), 
                                 "\n", nimi, "\n", 
