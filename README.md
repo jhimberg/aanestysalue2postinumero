@@ -19,7 +19,9 @@ Huom: Rakennustietokannan lähdedata vaihtuu: skriptin avoimen datan hakuosoitet
   - `aanestysalue2postinumero.R`: muodostaa painotukset  
   - `EKV2019_aanet.R`: hakee käsittelee 2019 eduskuntavaalien tulokset
 
-Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa.
+Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa. 
+
+Hakemistossa shiny on pieni esimerkki interaktiivista visualisoinneista. Tarvitaan myös paketit `shiny` ja `plotly`. 
 
 # Painotus
 

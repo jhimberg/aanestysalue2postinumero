@@ -94,28 +94,46 @@ Painotuksen voi laskea myös toiseen suuntaan, jos haluaa jakaa kappalemääriä
 ## Puolueiden esitmoitu äänisaalis postinumeroalueittain
 
 ```{r puolueet}
-kokonaisaanimaara_postinumeroittain <- left_join(aanet, ehdokkaat, by = c("ehdokasnumero", "vaalipiiri")) %>% 
-  select(postinumero, aanet = ehdokkaan_aanet_postinumeroalueella) %>% 
-  group_by(postinumero) %>% 
-  summarise(KAIKKI = sum(aanet, na.rm=TRUE)) 
-
-puolueiden_aanet_postinumeroittain <- left_join(aanet, ehdokkaat, by = c("ehdokasnumero", "vaalipiiri")) %>% 
-  select(postinumero, aanet = ehdokkaan_aanet_postinumeroalueella, puolue) %>% 
+kokonaisaanimaara_postinumeroittain <- 
+  select(aanet, 
+         postinumero, 
+         KAIKKI = postinumeroalueen_kokonaisaanimaara) %>%
+  distinct %>%
+  filter(!is.na(postinumero))
+  
+puolueiden_aanet_postinumeroittain <- 
+  left_join(aanet,
+            ehdokkaat, 
+            by = c("ehdokasnumero", "vaalipiiri")) %>% 
+  select(postinumero, 
+         aanet = ehdokkaan_aanet_postinumeroalueella, 
+         puolue) %>% 
   group_by(postinumero, puolue) %>% 
   summarise(aanet = sum(aanet, na.rm=TRUE)) %>% 
-  left_join(., kokonaisaanimaara_postinumeroittain, by="postinumero") %>% 
-  spread(puolue, aanet, fill=0)
+  left_join(., 
+            kokonaisaanimaara_postinumeroittain, 
+            by="postinumero") %>% 
+  spread(puolue, aanet, fill=0) %>% 
+   filter(!is.na(postinumero))
+  
 
 DT::datatable(puolueiden_aanet_postinumeroittain %>% 
-                mutate_at(., vars(EOP:VIHR), .funs = ~round((./KAIKKI)*100, 1)) %>% 
-                mutate_at(., vars(EOP:VIHR), .funs = ~paste0(., "%")) %>% 
-                mutate_at(., vars(KAIKKI), round) %>% 
-                left_join(postinumerot, by="postinumero") %>%
-                mutate(kunta = kuntano2nimi(kuntano)) %>%  select(-kuntano) %>%
-                order_columns(first_names = c("kunta", "postinumero", "nimi")),
-              colnames = c('Ääniä' = 'KAIKKI'),
-              caption = "Arvio äänistä puolueittain ja postinumeroalueittain",
-              rownames=FALSE)
+                          mutate_at(., vars(EOP:VIHR), .funs = ~round((. / KAIKKI), 5)) %>% 
+                          mutate_at(., vars(KAIKKI), round) %>% 
+                          left_join(postinumerot, by="postinumero") %>%
+                          mutate(kunta = kuntano2nimi(kuntano)) %>%  
+                          select(-kuntano) %>%
+                          order_columns(first_names = c("kunta", "postinumero", "nimi")),
+                      colnames = c('Ääniä' = 'KAIKKI'),
+                      caption = "Arvio äänistä puolueittain ja postinumeroalueittain",
+                      rownames = FALSE) %>%
+            formatPercentage(puolueiden_nimet, 1) %>% 
+            formatStyle(puolueiden_nimet,
+                background = styleColorBar(c(0,1), 'lightblue'),
+                backgroundSize = '100% 90%',
+                backgroundRepeat = 'no-repeat',
+                backgroundPosition = 'center'
+            )
 ```
 
 Taulukossa sarake "KAIKKI" on postinumeroalueen estimoitu äänimäärä, puoluetunnuksilla kunkin puolueen estimoitu äänimäärä postinumeroalueella 

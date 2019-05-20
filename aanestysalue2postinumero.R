@@ -6,6 +6,7 @@ rakennukset <- readRDS(file="data/rakennukset.rds")
 # Tässä esimerkissä käyetään vuoden 2019 Paavo-datan postinumeroita.
 # Rakennukset jotka ovat tilastoimattomilla alueilla jätetään huomiotta - ratkaisu on ehkä hyvä, 
 # ehkä huono. Osa äänestysalueiden äänistä katoaa tämän seurauksena, esim. ulkosuomalaiset jne. 
+# Ääniä siirtyy joillekin alueille enemmän kuin niillä on todellisuudessa edes äänestäjiä
 
 tilastointipostinumerot <- readRDS("map_and_names/paavodata.rds")$data %>% 
   select(vuosi, postinumero = pono, kuntano, pono_level, nimi) %>%
@@ -20,8 +21,8 @@ aanestysalue2postinumero <-
   rakennukset %>%
   filter(kayttotarkoitus == "asunto/toimitila" & 
            !is.na(aanestysalue.nro) & 
-           !is.na(kunta) &
-           postinumero %in% tilastointipostinumerot$postinumero) %>%
+           !is.na(kunta) 
+           & postinumero %in% tilastointipostinumerot$postinumero) %>%
   group_by(kunta, 
            aanestysalue.nro, 
            postinumero) %>%
