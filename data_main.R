@@ -18,13 +18,15 @@ kuntano2nimi <- function(kuntano) {
   plyr::mapvalues(kuntano, kuntano2kuntanimi_df$kuntano, kuntano2kuntanimi_df$kuntanimi, warn_missing = FALSE)
 }
 
+if (!dir.exists("data")) dir.create("data")
+
 # Haetaan ja talletetaan rakennustiedot
-if (!file.exists("data/rakennukset.rds")) source("rakennukset.R")
+if (!file.exists("data/rakennukset.rds")) source("data_rakennukset.R")
 
 # Muodostetaan painot äänestysalueilta postinumeroalueille: tuloksena 
 # dataframen map.pono.aanestysalue jolla muunnoksen voi tehdä
-if (!file.exists("data/aanestysalue2postinumero.rds")) source("aanestysalue2postinumero.R")
+if (!file.exists("data/aanestysalue2postinumero.rds")) source("data_aanestysalue2postinumero.R")
 
 # Haetaan eduskuntavaalien 2019 tulokset ja painotetaan ne postinumeroalueille
-if(!file.exists("data/EKV2019_aanet_postinumeroittain.rds")) source("EKV2019_aanet.R")
+if(!file.exists("data/EKV2019_aanet_postinumeroittain.rds")) source("data_EKV2019_aanet.R")
 

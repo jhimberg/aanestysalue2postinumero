@@ -7,7 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 
-source("../map_and_names/paavo_functions.R")
+source("./map_and_names/paavo_functions.R")
 
 shinyServer(function(input, output, session) {
 

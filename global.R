@@ -15,16 +15,16 @@ order_columns <- function(df, first_names)
 
 # kuntanumero nimeksi
 kuntano2nimi <- function(kuntano) {
-  if(!exists("kuntano2kuntanimi_df")) kuntano2kuntanimi_df <<- readRDS(file = "../map_and_names/kuntano2kuntanimi.2018.rds")
+  if(!exists("kuntano2kuntanimi_df")) kuntano2kuntanimi_df <<- readRDS(file = "./map_and_names/kuntano2kuntanimi.2018.rds")
   plyr::mapvalues(kuntano, kuntano2kuntanimi_df$kuntano, kuntano2kuntanimi_df$kuntanimi, warn_missing = FALSE)
 }
 
 
 # Data
-paavo <- readRDS("../map_and_names/paavodata.rds")
-aanet <- readRDS(file = "../data/EKV2019_aanet_postinumeroittain.rds")
-postinumerot <- readRDS(file = "../data/tilastointipostinumerot.rds")
-eduskuntavaalit <- readRDS(file = "../data/EKV2019_ehdokkaat.rds") %>% 
+paavo <- readRDS("./map_and_names/paavodata.rds")
+aanet <- readRDS(file = "./data/EKV2019_aanet_postinumeroittain.rds")
+postinumerot <- readRDS(file = "./data/tilastointipostinumerot.rds")
+eduskuntavaalit <- readRDS(file = "./data/EKV2019_ehdokkaat.rds") %>% 
   filter(aluejako == "äänestysalue") %>% 
   rename(aanestysalue.nro = alue)
 

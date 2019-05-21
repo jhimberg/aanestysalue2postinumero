@@ -3,25 +3,12 @@
 
 # Heuristiikka
 
-R:llä toteutettu heuristiikka jolla voi arvioida äänten määriä postinumeroalueilla. Haetaan rakennustiedot 
-https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi joissa rakennuksista on tiedossa sekä postinumero että äänestysalue. Rajoitutaan asuin- ja toimistorakennuksiin. Avoimessa datassa ei ole tämän tarkempaa tietoa rakennuksien laadusta tai koosta. Lasketaan kullekin Paavo-aineiston tilastointipostinumerolle osuudet sen rakennuksista eri äänestysalueilla. Näillä voi laskea postinumeroalueen äänimäärän äänestysalueiden painotettuna summana. 
+R:llä toteutettu heuristiikka jolla voi arvioida äänten määriä postinumeroalueilla. Rakennustiedot löytyvät
+https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi, joissa rakennuksista on tiedossa sekä postinumero että äänestysalue. Rajoitutaan asuin- ja toimistorakennuksiin. Avoimessa datassa ei ole tämän tarkempaa tietoa rakennuksien laadusta tai koosta. Lasketaan kullekin Paavo-aineiston tilastointipostinumerolle osuudet sen rakennuksista eri äänestysalueilla. Näillä voi laskea postinumeroalueen äänimäärän äänestysalueiden painotettuna summana. 
 
 Rakennustiedoissa on rakennuksia postinumeroilla, joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
 
-Huom: Rakennustietokannan lähdedata vaihtuu: skriptin avoimen datan hakuosoitetta täytyy muuttaa tarvittaessa
-
-# Käyttö
-
-`main.Rmd`: toteuttaa koko prosessin R-skripteillä ja hakee, paitsi rakennustiedot, myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. 
-
-`data.R`: skripti joka hakee datat ja muodostaa heuristiikassa tarvittavat painotukset äänestysalueelta postinumeroille ja päin vastoin. Kolme vaihetta jotka tallentavat tuloksensa `data` hakemistooin jatkokäyttöä varten
-  - `rakennukset.R`: hakee ja käsittelee rakennustiedot 
-  - `aanestysalue2postinumero.R`: muodostaa painotukset  
-  - `EKV2019_aanet.R`: hakee käsittelee 2019 eduskuntavaalien tulokset
-
-Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa. 
-
-Hakemistossa shiny on pieni esimerkki interaktiivista visualisoinneista. Tarvitaan myös paketit `shiny` ja `plotly`. 
+Huom: Rakennustietokannan lähdedatatiedosto ja sen osoite vaihtuu ajoittain. Skripteissä on tällä hetkellä käytössä AWS S3 -kansiooni kopioitu versio 19.2. 2019. (Rakennusten osoitetiedot ja äänestysalue - koko Suomi by Väestörekisterikeskus is licensed under a Creative Commons Attribution 4.0 International License)
 
 # Painotus
 
@@ -35,6 +22,23 @@ Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tied
 * rakennukset.pono: postinumeroalueen asuin/toimistorakennusten määrä
 * w.aanestysalue2pono: rakennukset.aanestysalue.pono / rakennukset.aanestysalue
 * w.pono2aanestysalue: rakennukset.aanestysalue.pono / rakennukset.pono          
+
+# Käyttöesimerkkejä
+
+## Skriptinä 
+
+`main.Rmd`: toteuttaa koko prosessin R-skripteillä ja hakee, paitsi rakennustiedot, myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. 
+
+`data_main.R`: skripti joka hakee datat ja muodostaa heuristiikassa tarvittavat painotukset äänestysalueelta postinumeroille ja päin vastoin. Kolme vaihetta jotka tallentavat tuloksensa `data` hakemistooin jatkokäyttöä varten
+  - `data_rakennukset.R`: hakee ja käsittelee rakennustiedot 
+  - `data_aanestysalue2postinumero.R`: muodostaa painotukset  
+  - `data_EKV2019_aanet.R`: hakee käsittelee 2019 eduskuntavaalien tulokset
+
+Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa. 
+
+## Shiny-sovellus
+`global.R`, `server.R` ja `ui.R` ovat pieni esimerkki interaktiivista visualisoinneista Shinyllä. Tarvitaan myös paketit `shiny` ja `plotly`. 
+
 
 # Valmiiksi ladatut aineistot
 

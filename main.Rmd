@@ -22,7 +22,7 @@ Datat tallennetaan hakemistoon `data`. Tilastointipostinumerot tallennetaan alis
 Seuraava vaihe kestää ensimmäisellä kerralla hetken.
 ```{r load_data}
 
-source("data.R") # pääskripti
+source("data_main.R") # pääskripti
 
 postinumerot <- readRDS(file = "data/tilastointipostinumerot.rds")
 eduskuntavaalit <- readRDS(file = "data/EKV2019_ehdokkaat.rds") %>% 
@@ -91,6 +91,8 @@ filter(aluekertoimet, postinumero == posti) %>%
 Alueelle 00980 otetaan lähes kaikki äänet äänestysalueilta Vuosaari A, B ja E, ja osa äänistä muutamalta muulta äänestysalueelta. Painot saadaan rakennusten määrien perustella (Ks. `aanestysalue2postinumero.R`). 
 Painotuksen voi laskea myös toiseen suuntaan, jos haluaa jakaa kappalemääriä tai tehdä painotettuja keskiarvoja postinumeroittain annetusta datasta äänestysalueille.
 
+Huom: äänten kokonaissummat koko vaalipiirissä voi saada täsmäämään, mutta postinumeroalueen äänimäärä voi esimerkiksi ylittää asukasluvun (tai olla liian pieni).
+
 ## Puolueiden esitmoitu äänisaalis postinumeroalueittain
 
 ```{r puolueet}
@@ -114,8 +116,11 @@ puolueiden_aanet_postinumeroittain <-
             kokonaisaanimaara_postinumeroittain, 
             by="postinumero") %>% 
   spread(puolue, aanet, fill=0) %>% 
-   filter(!is.na(postinumero))
+   filter(!is.na(postinumero)) %>% 
+  ungroup
   
+puolueiden_nimet <- names(select(puolueiden_aanet_postinumeroittain, EOP:VIHR))
+
 
 DT::datatable(puolueiden_aanet_postinumeroittain %>% 
                           mutate_at(., vars(EOP:VIHR), .funs = ~round((. / KAIKKI), 5)) %>% 
@@ -138,7 +143,7 @@ DT::datatable(puolueiden_aanet_postinumeroittain %>%
 
 Taulukossa sarake "KAIKKI" on postinumeroalueen estimoitu äänimäärä, puoluetunnuksilla kunkin puolueen estimoitu äänimäärä postinumeroalueella 
 
-## Yhdistetään äänestulos postinumeroalueiden Paavo-dataan
+## Yhdistetään äänestystulos postinumeroalueiden Paavo-dataan
 
 Tilastokeskuksen Paavo-data (https://www.stat.fi/tup/paavo/index_en.html) on haettu valmiiksi vuosilta 2018-2019 (ks. https://github.com/jhimberg/paavodata). 
 Datassa on myös laskettuna aggregaatteja kolmen ja kahden ensimmäinsen numeron määrittämille suuremmille alueille `pono_level`, mutta tässä otetaan postinumeroalueet (kaikki viisi numeroa) Paavo-datasta (versio 2019) ja yhdistetään se puolueiden äänimääriin.

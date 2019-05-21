@@ -2,11 +2,17 @@
 
 print("Lataa rakennusdata...")
 
-download.file("https://www.avoindata.fi/data/dataset/cf9208dc-63a9-44a2-9312-bbd2c3952596/resource/d265962a-9f12-4152-8914-cca63c0f1e44/download/suomi_osoitteet_2019-02-15.zip",
+
+# Rakennusdata löytyy https://www.avoindata.fi/data/fi/dataset/rakennusten-osoitetiedot-koko-suomi
+# CC BY 4.0 
+
+# Helmikuu 2019 kopio:
+
+download.file("http://datakerho.s3.amazonaws.com/suomi_osoitteet_2019-02-19.zip", 
               "data/suomi_osoitteet_2019-02-19.zip")
 
 rakennukset <-
-  read_delim("data/suomi_osoitteet_2019-02-19.zip", delim = ";", trim_ws = TRUE, col_types = "ccciiicccccccccc",
+  readr::read_delim("data/suomi_osoitteet_2019-02-19.zip", delim = ";", trim_ws = TRUE, col_types = "ccciiicccccccccc",
     col_names = c(
       "rakennustunnus",
       "kunta",
