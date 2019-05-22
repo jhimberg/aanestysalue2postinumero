@@ -47,7 +47,7 @@ ehdokkaat <- eduskuntavaalit %>%
          kieli, 
          kotikunta_nimi) %>% 
   distinct() %>% 
-  mutate(puolue = ifelse(grepl("^X", puolue) | puolue %in% c("ASYL","REF","AFÅ","RLI", "FÅ"), "MUUT", puolue))
+  mutate(puolue = ifelse(grepl("^X", puolue) | puolue %in% c("ASYL", "REF", "AFÅ", "RLI", "FÅ"), "MUUT", puolue))
 ```
 
 ## Summaa ehdokkaiden arvioitu äänisaalis postinumeroalueilla

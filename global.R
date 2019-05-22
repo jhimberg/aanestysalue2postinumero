@@ -6,7 +6,7 @@ library(tidyr)
 library(ggplot2)
 library(DT)
 library(ggiraph)
-library(plotly)
+#library(plotly)
 
 
 # To move a column in a data frame
@@ -79,7 +79,7 @@ aanet_ja_paavodata <- mutate_at(aanet_ja_paavodata, .vars=vars(EOP:VIHR), .funs 
   as_tibble
 
 aanet_ja_paavodata <- mutate(aanet_ja_paavodata, 
-                             vaentiheys = he_vakiy/(pinta_ala/1e6))
+                             vaestotiheys = he_vakiy/(pinta_ala/1e6))
 
 
 puoluenimet <- 
@@ -105,21 +105,36 @@ puoluenimet <-
     "Vasemmistoliitto", 
     "Vihreät")
 
+paavonimet <- 
+  gsub("(.+) (HE|RA|PT|HR|TR|TP|KO|TE)$", "\\2 \\1", paavo$vars$nimi, perl=TRUE) %>% 
+  gsub("(.+) (HE|RA|PT|HR|TR|TP|KO|TE)(, Osuus)$", "\\2 \\1 \\3", ., perl=TRUE) %>% 
+  gsub(" , ",", ", .)
+
 koodit <- c(paavo$vars$koodi, 
-            "vaentiheys",
+            "vaestotiheys",
             "KAIKKI", 
             puoluekoodit, 
             paste0(puoluekoodit, "_osuus"))
 
-nimet <- c(paavo$vars$nimi, 
-           "Väestötiheys", 
-           "Kokonaisäänimäärä", 
-           puoluenimet, 
-           paste0(puoluenimet,  ", Osuus"))
+nimet <- c(paste(paavonimet, 2019+paavo$vars$paavo.vuosi.offset), 
+           "HE_ Väestötiheys 2017", 
+           "EKV2019 Alueen estimoitu kokonaisäänimäärä", 
+           paste0("EKV2019 ", puoluenimet, ", äänimäärä"),
+           paste0("EKV2019 ", puoluenimet, ", ääniosuus"))
+
 
 names(koodit) <- nimet 
 koodit <- koodit[8:length(koodit)]
 nimet <- nimet[8:length(nimet)]
+
+ix <- order(nimet)
+koodit<-koodit[ix]
+nimet<-nimet[ix]
+
+
+
+
+
 
 
 

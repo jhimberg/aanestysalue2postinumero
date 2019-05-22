@@ -1,11 +1,3 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
 source("./map_and_names/paavo_functions.R")
 
@@ -54,7 +46,7 @@ shinyServer(function(input, output, session) {
                         ) 
         
         map_fi_zipcode_interactive(df,
-                                   title_label = plyr::mapvalues(muuttuja, paavo$vars$koodi, paavo$vars$nimi, warn_missing = FALSE),
+                                   title_label = plyr::mapvalues(muuttuja, koodit, nimet, warn_missing = FALSE),
                                    map = "2019",
                                    colorscale = scale_fill_distiller, 
                                    type = "seq", 
@@ -77,8 +69,10 @@ shinyServer(function(input, output, session) {
       kartta(input$muuttuja, alue = paste0("^", input$alue_kartta))
     })
     
-      output$XYZ <- renderPlotly({
-        print(input$vakiluku)
+      xscale <- reactive({if (input$xscale == "lineaarinen") scale_x_continuous() else scale_x_log10()})
+      yscale <- reactive({if (input$yscale == "lineaarinen") scale_x_continuous() else scale_y_log10()}) 
+    
+      output$XYZ <- plotly::renderPlotly({
         p <- ggplot(data = aanet_ja_paavodata %>% 
                       filter(grepl(paste0("^",input$alue_graafi), postinumero) &
                                he_vakiy >= as.numeric(input$vakiluku)) %>%  
@@ -93,14 +87,18 @@ shinyServer(function(input, output, session) {
                                          size = "he_vakiy",
                                          weight = "he_vakiy",
                                          label = "Alue")) + 
-          geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs", k=4), fullrange=FALSE, size=.5)  + 
+          geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs", k = 4), 
+                      fullrange=FALSE, 
+                      size= .5, 
+                      color="gray")  + 
           geom_point(na.rm = TRUE) + 
           theme_minimal() + 
+          xscale() + 
           scale_color_distiller(palette = "Spectral") +
           xlab(plyr::mapvalues(input$muuttuja_x, koodit, nimet, warn_missing = FALSE)) +
           ylab(plyr::mapvalues(input$muuttuja_y, koodit, nimet, warn_missing = FALSE)) 
           
-        ggplotly(p, tooltip=c("label", "x", "y", "colour"))
+        plotly::ggplotly(p, tooltip=c("label", "x", "y", "colour"))
         
       })
       

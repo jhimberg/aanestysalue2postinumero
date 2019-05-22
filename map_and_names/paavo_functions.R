@@ -120,7 +120,7 @@ map_fi_zipcode_interactive <-
                 by = c("pono"))
     
     p <- ggplot(data = pono_map, aes(x = long, y = lat)) + 
-      geom_polygon_interactive(aes_string(fill = attr_to_plot, group = "group", tooltip="tooltip"), colour = NA) + 
+      geom_polygon_interactive(aes_string(fill = attr_to_plot, group = "group", tooltip="tooltip"), colour = NA) +
       theme_void() +
       theme(legend.title = element_blank()) + 
       ggtitle(title_label)
@@ -128,6 +128,7 @@ map_fi_zipcode_interactive <-
     p <- p + colorscale(...)
     
     p <- p + coord_equal(ratio = lat_long_ratio) 
+    
     return(p)
   }
 

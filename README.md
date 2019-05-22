@@ -43,7 +43,7 @@ Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `strin
 # Valmiiksi ladatut aineistot
 
 Hakemistossa `map_and_names` on valmiina erilaisia kartta, demografia ja nimitietoja.
-- `paavodata.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston vuosi 2018 ja 2019 käsiteltynä tibbleksi. Paavo-data ja Postinumeroaluerajat, Tilastokeskus. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html 
+- `paavodata.rds` sisältää valmiiksi Tilastokeskuksen avoimen Paavo-aineiston vuosi 2018 ja 2019 käsiteltynä tibbleksi. Paavo-data ja Postinumeroaluerajat, Tilastokeskus. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2019 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) https://tilastokeskus.fi/tup/rajapintapalvelut/paavo.html 
 - `kuntano2kuntanimi.2018.rds`  sisältää kuntanumeroinnin ja kuntanimen mäppäyksen
-- `statfi_reduced_ziparea_map_2019.rds` postimumeroaluekartta redusoituna. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2017 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) ja redusoitu, ks. https://github.com/jhimberg/paavodata
+- `statfi_reduced_ziparea_map_2019.rds` postimumeroaluekartta redusoituna. Aineisto on ladattu Tilastokeskuksen rajapintapalvelusta 23.4.2019 lisenssillä CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.fi) ja redusoitu, ks. https://github.com/jhimberg/paavodata
 - `EKV2019_puoluekoodaus.csv` niputtaa muutamia yhteislistoja joilla on eri vaalipiireissä eri nimi, esim. Liike NYT 
