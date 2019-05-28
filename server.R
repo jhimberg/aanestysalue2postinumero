@@ -26,7 +26,7 @@ shinyServer(function(input, output, session) {
     },
     server=TRUE)
     
-    kartta <- function(muuttuja, alue) {
+    puoluekartta <- function(muuttuja, alue) {
         df <-   select(aanet_ja_paavodata,
                        postinumero, 
                        nimi,
@@ -50,27 +50,58 @@ shinyServer(function(input, output, session) {
                                    map = "2019",
                                    colorscale = scale_fill_distiller, 
                                    type = "seq", 
-                                   palette = "YlOrRd",
+                                   palette = "Blues",
+                                   #colorscale = scale_fill_viridis_c,
+                                   #option = "D",
                                    direction = 1) %>% 
             girafe(ggobj = .) %>% 
             girafe_options(x=., opts_zoom(min = .5, max = 5), opts_sizing(rescale = TRUE, width = 1))
     }
+      
+    ehdokaskartta <- function(numero, vaalipiiri = 1, alue="^00") {
+      df <-   filter(ehdokkaiden_aanet_postinumeroittain[[vaalipiiri]],
+                     ehdokasnumero == numero) %>% 
+        filter(grepl(alue, postinumero))
+      
+      df <- transmute(df, 
+                      pono = postinumero,
+                      aanet, 
+                      tooltip = paste0(postinumero)) 
+      
+      map_fi_zipcode_interactive(df,
+                                 map = "2019",
+                                 title_label = input$ehdokas,
+                                 colorscale = scale_fill_distiller, 
+                                 type = "seq", 
+                                 palette = "Blues",
+                                 direction = 1) %>% 
+        girafe(ggobj = .) %>% 
+        girafe_options(x=., opts_zoom(min = .5, max = 5), opts_sizing(rescale = TRUE, width = 1))
+    }
+    
+    output$ehdokaskartta <- renderGirafe({ 
+      ehdokaskartta(vaalipiiri = as.numeric(input$vaalipiiri), 
+                    numero = input$ehdokas, 
+                    alue = paste0("^", input$alue_ehdokaskartta))
+    })
+      
+    output$puoluekartta <- renderGirafe({ 
+      puoluekartta(input$muuttuja, alue = paste0("^", input$alue_puoluekartta))
+    })
+    
+    output$ehdokas <- renderUI({
+      ehdokkaat <- transmute(filter(ehdokkaat, 
+                                    vaalipiiri == names(which(vaalipiirit == as.numeric(input$vaalipiiri)))), 
+                             ehdokasnumero,
+                             txt = paste0(sukunimi, ", ", etunimi, " (", ehdokasnumero, ")"))
+        labels <- ehdokkaat$ehdokasnumero
+        names(labels)<-ehdokkaat$txt
+      selectInput("ehdokas", "Ehdokas:", labels)
+
+    })
         
-    
-    output$postinumerokartta_y <- renderGirafe({ 
-        kartta(input$muuttuja_y, alue = paste0("^", input$alue_kartta))
-        })
-    
-    output$postinumerokartta_x <- renderGirafe({ 
-        kartta(input$muuttuja_x, alue = paste0("^", input$alue_kartta))
-    })
-    
-    output$postinumerokartta <- renderGirafe({ 
-      kartta(input$muuttuja, alue = paste0("^", input$alue_kartta))
-    })
-    
       xscale <- reactive({if (input$xscale == "lineaarinen") scale_x_continuous() else scale_x_log10()})
-      yscale <- reactive({if (input$yscale == "lineaarinen") scale_x_continuous() else scale_y_log10()}) 
+      yscale <- reactive({if (input$yscale == "lineaarinen") scale_y_continuous() else scale_y_log10()}) 
     
       output$XYZ <- plotly::renderPlotly({
         p <- ggplot(data = aanet_ja_paavodata %>% 
@@ -87,14 +118,18 @@ shinyServer(function(input, output, session) {
                                          size = "he_vakiy",
                                          weight = "he_vakiy",
                                          label = "Alue")) + 
-          geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs", k = 4), 
+          geom_smooth(method = "gam", 
+                      #formula = y ~ s(x, bs = "cs", k = 4),
+                      formula = y ~ x, 
                       fullrange=FALSE, 
-                      size= .5, 
-                      color="gray")  + 
+                      size= .25, 
+                      color="gray",
+                      linetype=NA)  + 
           geom_point(na.rm = TRUE) + 
           theme_minimal() + 
           xscale() + 
-          scale_color_distiller(palette = "Spectral") +
+          yscale() + 
+          scale_color_viridis_c(direction = -1, alpha=.7, option="C") +
           xlab(plyr::mapvalues(input$muuttuja_x, koodit, nimet, warn_missing = FALSE)) +
           ylab(plyr::mapvalues(input$muuttuja_y, koodit, nimet, warn_missing = FALSE)) 
           

@@ -21,7 +21,8 @@ aanestysalue2postinumero <-
   rakennukset %>%
   filter(kayttotarkoitus == "asunto/toimitila" & 
            !is.na(aanestysalue.nro) & 
-           !is.na(kunta) 
+           !is.na(kunta) &
+           !is.na(maakunta)
            & postinumero %in% tilastointipostinumerot$postinumero) %>%
   group_by(kunta, 
            aanestysalue.nro, 
@@ -40,6 +41,17 @@ aanestysalue2postinumero <-
     w.pono2aanestysalue = rakennukset.aanestysalue.pono / rakennukset.pono
   )
 
+R <- 
+  filter(rakennukset, kayttotarkoitus == "asunto/toimitila" & 
+           !is.na(aanestysalue.nro) & 
+           !is.na(kunta) &
+           !is.na(maakunta)
+         & postinumero %in% tilastointipostinumerot$postinumero) %>%
+  rename(x=ETRS_TM35FIN_I, y=ETRS_TM35FIN_P) %>%
+  group_by(postinumero) %>% 
+  mutate(d = sqrt((x-mean(x, na.rm=TRUE))^2 + (y-mean(y, na.rm=TRUE))^2),
+         z = (d - mean(d, na.rm=TRUE)) / sd(d, na.rm=TRUE))
+         
 aanestysalue_nimet <- select(rakennukset, kunta, aanestysalue.nro, aanestysalue.nimi.fi) %>% 
   filter(!is.na(kunta) & !is.na(aanestysalue.nro)) %>% 
   mutate(kuntanimi = kuntano2nimi(kunta)) %>%
