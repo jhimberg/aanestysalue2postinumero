@@ -73,23 +73,6 @@ shinyUI(
       paneeliteksti(),
       # Show a plot of the generated distribution
       DTOutput("puolueiden_aanet_postinumeroittain")
-    ),
-    tabPanel(
-      "Ehdokaskartta",
-      h2("Postinumeroalueittaisen datan visualisointia"),
-      paneeliteksti(),
-      sidebarLayout(
-        sidebarPanel(
-        fluidRow(
-          selectInput("vaalipiiri", "Vaalipiiri", vaalipiirit, selected = 5),
-          textInput("alue_ehdokaskartta", "Rajoita postinumero alkamaan:", value = "00"),
-          uiOutput("ehdokas")
-          ), width = 3
-        ),
-        mainPanel(
-          girafeOutput("ehdokaskartta", height = "700px")
-          )
     )
-  )
 )
 )

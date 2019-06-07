@@ -8,7 +8,8 @@ print("Lataa rakennusdata...")
 
 # Helmikuu 2019 kopio:
 
-download.file("http://datakerho.s3.amazonaws.com/suomi_osoitteet_2019-02-19.zip", 
+if (!file.exists("data/suomi_osoitteet_2019-02-19.zip")) 
+  download.file("http://datakerho.s3.amazonaws.com/suomi_osoitteet_2019-02-19.zip", 
               "data/suomi_osoitteet_2019-02-19.zip")
 
 rakennukset <-

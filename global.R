@@ -19,7 +19,6 @@ kuntano2nimi <- function(kuntano) {
   plyr::mapvalues(kuntano, kuntano2kuntanimi_df$kuntano, kuntano2kuntanimi_df$kuntanimi, warn_missing = FALSE)
 }
 
-
 # Data
 paavo <- readRDS("./map_and_names/paavodata.rds")
 aanet <- readRDS(file = "./data/EKV2019_aanet_postinumeroittain.rds")
@@ -72,9 +71,8 @@ if (!file.exists("data/puolueiden_aanet_postinumeroittain.rds")) {
 } else
   puolueiden_aanet_postinumeroittain <- readRDS(file = "data/puolueiden_aanet_postinumeroittain.rds")
     
-
 if (!file.exists("data/ehdokkaiden_aanet_postinumeroittain.rds")) {
-  print("Lasketaan ehdokkaiden äänet postinumeroalueilla ja tallenetaan - kestää 1. kerralla n. minuutin!")
+  print("Lasketaan ehdokkaiden äänet postinumeroalueilla ja tallennetaan - kestää 1. kerralla n. minuutin!")
   ehdokkaiden_aanet_postinumeroittain <- 
     purrr::map(unique(ehdokkaat$vaalipiiri), .f=
                  function(x) left_join(aanet, 
@@ -157,31 +155,9 @@ nimet <- c(paste(paavonimet, 2019+paavo$vars$paavo.vuosi.offset),
 names(koodit) <- nimet 
 koodit <- koodit[8:length(koodit)]
 
-#tarkeimmat <- c("he_vakiy","he_kika","ko_ika18y","hr_tuy","hr_ktu","hr_mtu","hr_ovy","te_taly","tr_kuty",
-#"ra_raky","pt_vakiy","pt_tyoll","pt_tyott","pt_0_14","pt_opisk","pt_elakel","pt_muut","pt_tyovy",
-#"pt_tyovu","he_naiset_osuus","he_miehet_osuus","he_0_2_osuus","he_3_6_osuus","he_7_12_osuus",
-#"he_13_15_osuus","he_16_17_osuus","he_18_19_osuus","he_20_24_osuus","he_25_29_osuus",
-#"he_30_34_osuus","he_35_39_osuus","he_40_44_osuus","he_45_49_osuus","he_50_54_osuus","he_55_59_osuus",
-#"he_60_64_osuus","he_65_69_osuus","he_70_74_osuus","he_75_79_osuus","he_80_84_osuus",
-#"he_85__osuus","ko_perus_osuus","ko_koul_osuus","ko_yliop_osuus","ko_ammat_osuus",
-#"ko_al_kork_osuus","ko_yl_kork_osuus","hr_pi_tul_osuus","hr_ke_tul_osuus","hr_hy_tul_osuus",
-#"te_nuor_osuus","te_eil_np_osuus","te_laps_osuus","te_plap_osuus","te_aklap_osuus",
-#"te_klap_osuus","te_teini_osuus","te_aik_osuus","te_elak_osuus","te_omis_as_osuus",
-#"te_vuok_as_osuus","te_muu_as_osuus","tr_pi_tul_osuus","tr_ke_tul_osuus","tr_hy_tul_osuus",
-#"ra_ke_osuus","ra_muut_osuus","ra_asrak_osuus","ra_pt_as_osuus","ra_kt_as_osuus",
-#"pt_tyoll_osuus","pt_tyott_osuus","pt_0_14_osuus","pt_opisk_osuus","pt_elakel_osuus",
-#"pt_muut_osuus","pt_tyovy_osuus","pt_tyovu_osuus","KAIKKI",
-#"EOP_osuus","FP_osuus","IP_osuus","KD_osuus","KESK_osuus",
-#"KOK_osuus","KP_osuus","KTP_osuus","LIB_osuus","MUUT_osuus",
-#"NYT_osuus","PIR_osuus","PS_osuus","RKP_osuus","SDP_osuus",
-#"SIN_osuus","SKE_osuus","SKP_osuus","STL_osuus","VAS_osuus",
-#"VIHR_osuus","vaestotiheys")
-#koodit <- koodit[koodit %in% tarkeimmat]
-
 ix <- order(names(koodit))
 nimet <- names(koodit)[ix]
 koodit <- koodit[ix]
-
 
 vaalipiirit <- seq(length(unique(ehdokkaat$vaalipiiri)))
 names(vaalipiirit)<-unique(ehdokkaat$vaalipiiri)

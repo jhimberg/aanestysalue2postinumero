@@ -1,7 +1,8 @@
-#### Eduskuntavaalien äänet postinumeroille 
+
 
 print("Hae eduskuntavaalien tulokset...")
 
+if (!file.exists( "data/ekv.2019.csv.zip"))
 download.file("https://tulospalvelu.vaalit.fi/EKV-2019/ekv-2019_ehd_maa.csv.zip", 
               "data/ekv.2019.csv.zip")
 

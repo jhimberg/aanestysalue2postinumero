@@ -1,5 +1,5 @@
 # aanestysalue2postinumero
-Äänestysalueittainen data postinumeroalueille avoimen rakennustiedon avulla. Postinumeroittaisen vaalien tulosdatan visualisointia
+Äänestysalueittainen data postinumeroalueille avoimen rakennustiedon avulla. Postinumeroittaisen vaalien tulosdatan visualisointia.
 
 # Heuristiikka
 
@@ -8,7 +8,7 @@ https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi, jo
 
 Rakennustiedoissa on rakennuksia postinumeroilla, joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
 
-Huom: Rakennustietokannan lähdedatatiedosto ja sen osoite vaihtuu ajoittain. Skripteissä on tällä hetkellä käytössä AWS S3 -kansiooni kopioitu versio 19.2. 2019. (Rakennusten osoitetiedot ja äänestysalue - koko Suomi by Väestörekisterikeskus is licensed under a Creative Commons Attribution 4.0 International License)
+Huom: Rakennustietokannan lähdedatatiedosto ja sen osoite vaihtuu ajoittain. Skripteissä on tällä hetkellä käytössä AWS S3 -kansioon kopioitu versio 19.2. 2019, jotta käytössä olisi eduskuntavaaleja 2019 oleva tieto. (Rakennusten osoitetiedot ja äänestysalue - koko Suomi by Väestörekisterikeskus is licensed under a Creative Commons Attribution 4.0 International License)
 
 # Painotus
 
@@ -27,18 +27,16 @@ Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tied
 
 ## Skriptinä 
 
-`main.Rmd`: toteuttaa koko prosessin R-skripteillä ja hakee, paitsi rakennustiedot, myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. 
-
-`data_main.R`: skripti joka hakee datat ja muodostaa heuristiikassa tarvittavat painotukset äänestysalueelta postinumeroille ja päin vastoin. Kolme vaihetta jotka tallentavat tuloksensa `data` hakemistooin jatkokäyttöä varten
+`main.Rmd`: toteuttaa koko prosessin R-skripteillä ja hakee, paitsi rakennustiedot, myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. Aliskirptejä ovat
   - `data_rakennukset.R`: hakee ja käsittelee rakennustiedot 
-  - `data_aanestysalue2postinumero.R`: muodostaa painotukset  
+  - `data_aanestysalue2postinumero.R`: muodostaa heuristiikassa tarvittavat painotukset äänestysalueelta postinumeroille ja päin vastoin
   - `data_EKV2019_aanet.R`: hakee käsittelee 2019 eduskuntavaalien tulokset
 
 Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa. 
 
 ## Shiny-sovellus
-`global.R`, `server.R` ja `ui.R` ovat pieni esimerkki interaktiivista visualisoinneista Shinyllä. Tarvitaan myös paketit `shiny` ja `plotly`. 
 
+`global.R`, `server.R` ja `ui.R` ovat pieni esimerkki interaktiivista visualisoinneista Shinyllä. Tarvitaan myös paketit `shiny` ja `plotly`. *Jotta esimerkki toimii, on `main.Rmd` ajettava ensin!*
 
 # Valmiiksi ladatut aineistot
 

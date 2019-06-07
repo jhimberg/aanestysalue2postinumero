@@ -15,14 +15,43 @@ library(DT)
 
 ## Initialisoi, lataa ja lue datat
 
-Skripti ottaa käyttöön tarvittavia kirjastoja ja funktioita. Lataa tarvittaessa rakennus- ja vaalidatan (http://www.avoindata.fi, http://tulospalvelu.vaalit.fi). Jos tiedostot jo löytyvät, niitä ei haeta uudestaan.  
-Datat tallennetaan hakemistoon `data`. Tilastointipostinumerot tallennetaan aliskiptissä `aanestysalue2postinumero.R`:ssä ja niissä on mukana alueiden nimet 
-Äänestystulokset tarvitaan äänestysalueittain (datassa ne ovat myös summattuna kunnittain jne)
+Skripti ottaa käyttöön tarvittavia kirjastoja ja funktioita ja lataa tarvittaessa rakennus- ja vaalidatan (http://www.avoindata.fi, http://tulospalvelu.vaalit.fi). *Jos tiedostot jo löytyvät, niitä ei haeta tai lasketa uudestaan.* Jos haluat niin tehdä, poista hakemistosta `data` tiedostot.
 
-Seuraava vaihe kestää ensimmäisellä kerralla hetken.
+Datat tallennetaan hakemistoon `data`. Tilastointipostinumerot tallennetaan aliskiptissä `aanestysalue2postinumero.R`:ssä ja niissä on mukana alueiden nimet. Äänestystulokset tarvitaan äänestysalueittain (datassa ne ovat myös summattuna kunnittain jne)
+
+Seuraava vaihe kestää ensimmäisellä kerralla hetken. 
 ```{r load_data}
 
-source("data_main.R") # pääskripti
+#library(plyr) 
+#library(DT) 
+library(dplyr)
+library(stringr)
+library(readr) 
+library(tidyr)
+library(ggplot2)
+
+# Move columns in a data frame
+order_columns <- function(df, first_names) 
+  select(df, one_of(c(first_names, setdiff(names(df), first_names))))
+
+# kuntanumerosta kuntanimeksi
+kuntano2nimi <- function(kuntano) {
+  if(!exists("kuntano2kuntanimi_df")) kuntano2kuntanimi_df <<- readRDS(file = "map_and_names/kuntano2kuntanimi.2018.rds")
+  plyr::mapvalues(kuntano, kuntano2kuntanimi_df$kuntano, kuntano2kuntanimi_df$kuntanimi, warn_missing = FALSE)
+}
+
+if (!dir.exists("data")) dir.create("data")
+
+# Haetaan ja talletetaan rakennustiedot
+if (!file.exists("data/rakennukset.rds")) source("data_rakennukset.R")
+
+# Muodostetaan painot äänestysalueilta postinumeroalueille: tuloksena 
+# dataframe map.pono.aanestysalue jolla muunnoksen voi tehdä
+
+if (!file.exists("data/aanestysalue2postinumero.rds")) source("data_aanestysalue2postinumero.R")
+
+# Haetaan eduskuntavaalien 2019 tulokset
+if(!file.exists("data/EKV2019_aanet_postinumeroittain.rds")) source("data_EKV2019_aanet.R")
 
 postinumerot <- readRDS(file = "data/tilastointipostinumerot.rds")
 eduskuntavaalit <- readRDS(file = "data/EKV2019_ehdokkaat.rds") %>% 
@@ -88,10 +117,9 @@ filter(aluekertoimet, postinumero == posti) %>%
 ```
 
 
-Alueelle 00980 otetaan lähes kaikki äänet äänestysalueilta Vuosaari A, B ja E, ja osa äänistä muutamalta muulta äänestysalueelta. Painot saadaan rakennusten määrien perustella (Ks. `aanestysalue2postinumero.R`). 
-Painotuksen voi laskea myös toiseen suuntaan, jos haluaa jakaa kappalemääriä tai tehdä painotettuja keskiarvoja postinumeroittain annetusta datasta äänestysalueille.
+Esimerkiksi alueelle 00980 summataan lähes kaikki äänet äänestysalueilta Vuosaari A, B ja E, ja vaihteleva osa äänistä alueista C, D, F, F, G ja H. Painot saadaan rakennusten määrien perustella (Ks. `aanestysalue2postinumero.R`). Painotuksen voi laskea myös toiseen suuntaan, jos haluaa aggregoida postinumeroittain annettua dataa äänestysalueille.
 
-Huom: äänten kokonaissummat koko vaalipiirissä voi saada täsmäämään, mutta postinumeroalueen äänimäärä voi esimerkiksi ylittää asukasluvun (tai olla liian pieni).
+Huom: äänten kokonaissummat koko vaalipiirissä voi saada täsmäämään, mutta postinumeroalueen äänimäärä voi esimerkiksi ylittää asukasluvun (tai olla liian pieni). Kokonaissumankin osalta ne äänestysalueet, joita ei vastaa mikään postinumero, jäävät kokonaan pois.  
 
 ## Puolueiden esitmoitu äänisaalis postinumeroalueittain
 
@@ -198,7 +226,7 @@ ggplot(
 ```
 
 ## Esimerkki 2
-```{r kartta_kok}
+```{r kartta_kok1}
 source("map_and_names/paavo_functions.R")
 
 df <- transmute(aanet_ja_paavodata, 
@@ -223,10 +251,8 @@ map_fi_zipcode_interactive(df,
 
 ```
 
-```{r kartta_kok}
+```{r kartta_kok2}
 source("map_and_names/paavo_functions.R")
-
-
 
 df <- transmute(aanet_ja_paavodata, 
                 pono = postinumero, 

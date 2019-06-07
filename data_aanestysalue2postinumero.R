@@ -4,9 +4,6 @@ rakennukset <- readRDS(file="data/rakennukset.rds")
 
 # Käytössä olevat postinumerot, niiden pääasiallinen kunta ja alueen nimi
 # Tässä esimerkissä käyetään vuoden 2019 Paavo-datan postinumeroita.
-# Rakennukset jotka ovat tilastoimattomilla alueilla jätetään huomiotta - ratkaisu on ehkä hyvä, 
-# ehkä huono. Osa äänestysalueiden äänistä katoaa tämän seurauksena, esim. ulkosuomalaiset jne. 
-# Ääniä siirtyy joillekin alueille enemmän kuin niillä on todellisuudessa edes äänestäjiä
 
 tilastointipostinumerot <- readRDS("map_and_names/paavodata.rds")$data %>% 
   select(vuosi, postinumero = pono, kuntano, pono_level, nimi) %>%
@@ -16,14 +13,14 @@ tilastointipostinumerot <- readRDS("map_and_names/paavodata.rds")$data %>%
 
 saveRDS(tilastointipostinumerot, file="data/tilastointipostinumerot.rds")
 
-# huom: ääsestysalueen uniikki tunnus äänestysalueen numero _ja_ kuntanumero  
+# huom: ääsestysalueen uniikki tunnus äänestysalueen numero _ja_ kuntanumero
+
 aanestysalue2postinumero <- 
   rakennukset %>%
   filter(kayttotarkoitus == "asunto/toimitila" & 
            !is.na(aanestysalue.nro) & 
            !is.na(kunta) &
-           !is.na(maakunta)
-           & postinumero %in% tilastointipostinumerot$postinumero) %>%
+           !is.na(maakunta)) %>%
   group_by(kunta, 
            aanestysalue.nro, 
            postinumero) %>%
@@ -35,23 +32,26 @@ aanestysalue2postinumero <-
   ungroup %>%
   group_by(postinumero) %>%
   mutate(rakennukset.pono = sum(rakennukset.aanestysalue.pono)) %>%
-  ungroup %>%
+  ungroup 
+
+# Rakennukset jotka ovat tilastoimattomilla alueilla jätetään huomiotta - ratkaisu on ehkä hyvä, 
+# ehkä huono. Osa äänestysalueiden äänistä katoaa tämän seurauksena, esim. ulkosuomalaiset jne. 
+# Toiseksi leikkaukset joilla on vain yksi rakennus, poistetaan. Tämä on helppo keino poistaa suuri osa selvästivirheellisistä
+# rakennuksen osoitetiedoista: osa postinumeroista on selvästi väärin. Näitä löytyy esim. kun kartta piirretään 
+# vaalipiireittäin: osa polygoneista on aivan muualla kuin pitäisi kun käytetään äänten siirtopainoja 
+# äänestysalueelta postinumerolle ja nämä ovat usein yksittäisiä rakennuksia. Samalla toki saattaa poistua oikein olevia rakennuksia 
+
+aanestysalue2postinumero <- aanestysalue2postinumero %>% 
+  filter((rakennukset.aanestysalue.pono > 1 | 
+            rakennukset.aanestysalue.pono == 1 & 
+            rakennukset.aanestysalue.pono / rakennukset.pono > 0.02 &
+            rakennukset.aanestysalue.pono / rakennukset.pono > 0.02)
+           & postinumero %in% tilastointipostinumerot$postinumero) %>%
   mutate(
     w.aanestysalue2pono = rakennukset.aanestysalue.pono / rakennukset.aanestysalue,
     w.pono2aanestysalue = rakennukset.aanestysalue.pono / rakennukset.pono
   )
 
-R <- 
-  filter(rakennukset, kayttotarkoitus == "asunto/toimitila" & 
-           !is.na(aanestysalue.nro) & 
-           !is.na(kunta) &
-           !is.na(maakunta)
-         & postinumero %in% tilastointipostinumerot$postinumero) %>%
-  rename(x=ETRS_TM35FIN_I, y=ETRS_TM35FIN_P) %>%
-  group_by(postinumero) %>% 
-  mutate(d = sqrt((x-mean(x, na.rm=TRUE))^2 + (y-mean(y, na.rm=TRUE))^2),
-         z = (d - mean(d, na.rm=TRUE)) / sd(d, na.rm=TRUE))
-         
 aanestysalue_nimet <- select(rakennukset, kunta, aanestysalue.nro, aanestysalue.nimi.fi) %>% 
   filter(!is.na(kunta) & !is.na(aanestysalue.nro)) %>% 
   mutate(kuntanimi = kuntano2nimi(kunta)) %>%

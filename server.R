@@ -58,33 +58,6 @@ shinyServer(function(input, output, session) {
             girafe_options(x=., opts_zoom(min = .5, max = 5), opts_sizing(rescale = TRUE, width = 1))
     }
       
-    ehdokaskartta <- function(numero, vaalipiiri = 1, alue="^00") {
-      df <-   filter(ehdokkaiden_aanet_postinumeroittain[[vaalipiiri]],
-                     ehdokasnumero == numero) %>% 
-        filter(grepl(alue, postinumero))
-      
-      df <- transmute(df, 
-                      pono = postinumero,
-                      aanet, 
-                      tooltip = paste0(postinumero)) 
-      
-      map_fi_zipcode_interactive(df,
-                                 map = "2019",
-                                 title_label = input$ehdokas,
-                                 colorscale = scale_fill_distiller, 
-                                 type = "seq", 
-                                 palette = "Blues",
-                                 direction = 1) %>% 
-        girafe(ggobj = .) %>% 
-        girafe_options(x=., opts_zoom(min = .5, max = 5), opts_sizing(rescale = TRUE, width = 1))
-    }
-    
-    output$ehdokaskartta <- renderGirafe({ 
-      ehdokaskartta(vaalipiiri = as.numeric(input$vaalipiiri), 
-                    numero = input$ehdokas, 
-                    alue = paste0("^", input$alue_ehdokaskartta))
-    })
-      
     output$puoluekartta <- renderGirafe({ 
       puoluekartta(input$muuttuja, alue = paste0("^", input$alue_puoluekartta))
     })
