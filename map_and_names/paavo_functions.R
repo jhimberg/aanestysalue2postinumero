@@ -39,7 +39,7 @@ zip_code_map <- function(map_name = "2019") {
   
 map_fi_zipcode <- 
   function(df, title_label = NA, map = "2019", colorscale = scale_fill_viridis_c, ...) {
-    # df: two columns from Paavo-data: pono and some data columns
+    # df: two columns from Paavo-data: 'pono' and some data column
     # title_label: string, deafault(NA) sets the variable name   
     # map: "2017", "2018", or "2019" (default) or a polygon data frame 
     # colorscale: colorscale function, default: scale_fill_viridis_c
@@ -86,7 +86,7 @@ map_fi_zipcode <-
 
 map_fi_zipcode_interactive <- 
   function(df, title_label = NA, map = "2019", colorscale = scale_fill_viridis_c, ...) {
-    # df: two columns from Paavo-data: 'pono' and some data column
+    # df: three columns from Paavo-data: 'pono', 'tooltip', and and some data column
     # title.label: string, deafault(NA) sets the variable name     
     # colorscale: colorscale function, default: scale_fill_viridis_c
     " ...: options for the colorscale"
@@ -101,7 +101,7 @@ map_fi_zipcode_interactive <-
       else
         stop("Must be a string or a (polygon) data frame") 
       
-    if(dim(df)[2] != 3) stop("df must have three columns.")
+    if(dim(df)[2] != 3) stop("df must have three columns: 'pono', 'tooltip', and a data column of any name")
     
     attr_to_plot <- setdiff(names(df), c("pono", "tooltip")) 
     if (!any(names(df) == "pono")) stop("There must be a field name 'pono': Finnish zipcodes. (2, 3, or all 5 numbers from the start.")

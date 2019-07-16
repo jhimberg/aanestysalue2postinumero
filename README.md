@@ -21,7 +21,6 @@ Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tied
 * rakennukset.aanestysalue: äänestysalueen (kunta+aanestysalue.nro) asuin/toimistorakennusten määrä 
 * rakennukset.pono: postinumeroalueen asuin/toimistorakennusten määrä
 * w.aanestysalue2pono: rakennukset.aanestysalue.pono / rakennukset.aanestysalue
-* w.pono2aanestysalue: rakennukset.aanestysalue.pono / rakennukset.pono          
 
 # Käyttöesimerkkejä
 
@@ -29,8 +28,7 @@ Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tied
 
 `main.Rmd`: toteuttaa koko prosessin R-skripteillä ja hakee, paitsi rakennustiedot, myös 2019 eduskuntavaalien tulokset (https://tulospalvelu.vaalit.fi/EKV-2019), joita käytetään esimerkkinä. Aliskirptejä ovat
   - `data_rakennukset.R`: hakee ja käsittelee rakennustiedot 
-  - `data_aanestysalue2postinumero.R`: muodostaa heuristiikassa tarvittavat painotukset äänestysalueelta postinumeroille ja päin vastoin
-  - `data_EKV2019_aanet.R`: hakee käsittelee 2019 eduskuntavaalien tulokset
+  - `data_EKV2019_aanet.R`: hakee ja käsittelee 2019 eduskuntavaalien tulokset
 
 Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa. 
 

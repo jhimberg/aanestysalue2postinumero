@@ -1,5 +1,4 @@
 
-
 print("Hae eduskuntavaalien tulokset...")
 
 if (!file.exists( "data/ekv.2019.csv.zip"))

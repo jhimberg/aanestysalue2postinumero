@@ -6,6 +6,8 @@ misc/*
 .Rhistory
 .Rapp.history
 
+README.html
+
 # Session Data files
 .RData
 

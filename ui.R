@@ -51,7 +51,7 @@ shinyUI(
       )
     ),
     tabPanel(
-      "Puoluekartta",
+      "Kartta",
       h2("Postinumeroalueittaisen datan visualisointia"),
       paneeliteksti(),
       sidebarLayout(sidebarPanel(

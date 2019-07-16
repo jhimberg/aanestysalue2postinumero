@@ -22,15 +22,15 @@ rakennukset <-
       "ETRS_TM35FIN_P",
       "ETRS_TM35FIN_I",
       "osoitenumero",
-      "kadunnimi.fi",
-      "kadunnimi.se",
+      "kadunnimi_fi",
+      "kadunnimi_se",
       "katunumero",
       "postinumero",
-      "aanestysalue.nro",
-      "aanestysalue.nimi.fi",
-      "aanestysalue.nimi.se",
+      "aanestysalue_nro",
+      "aanestysalue_nimi_fi",
+      "aanestysalue_nimi_se",
       "sijaintikiinteisto",
-      "poiminta.pvm"
+      "poiminta_pvm"
     )
 )
 
@@ -38,12 +38,11 @@ kuntano2nimi <- function(kuntano, numero2nimi=readRDS(file = "map_and_names/kunt
   plyr::mapvalues(kuntano, from = numero2nimi$kuntano, to = numero2nimi$kuntanimi, warn_missing = FALSE)
 
 rakennukset <- mutate(rakennukset,
-  kadunnimi.fi = iconv(kadunnimi.fi, "latin1", "utf-8"),
-  kadunnimi.se = iconv(kadunnimi.se, "latin1", "utf-8"),
-  aanestysalue.nimi.fi = iconv(aanestysalue.nimi.fi, "latin1", "utf-8"),
-  aanestysalue.nimi.se = iconv(aanestysalue.nimi.se, "latin1", "utf-8"),
-  kayttotarkoitus = plyr::mapvalues(kayttotarkoitus, c(0, 1, 2), c(NA, "asunto/toimitila", "tuotanto/muu")),
-  kuntanimi = kuntano2nimi(kunta)
+  kadunnimi_fi = iconv(kadunnimi_fi, "latin1", "utf-8"),
+  kadunnimi_se = iconv(kadunnimi_se, "latin1", "utf-8"),
+  aanestysalue_nimi_fi = iconv(aanestysalue_nimi_fi, "latin1", "utf-8"),
+  aanestysalue_nimi_se = iconv(aanestysalue_nimi_se, "latin1", "utf-8"),
+  kayttotarkoitus = plyr::mapvalues(kayttotarkoitus, c(0, 1, 2), c(NA, "asunto/toimitila", "tuotanto/muu"))
 )
 
 saveRDS(rakennukset, file = "data/rakennukset.rds")

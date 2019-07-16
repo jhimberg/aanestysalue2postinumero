@@ -71,29 +71,6 @@ if (!file.exists("data/puolueiden_aanet_postinumeroittain.rds")) {
 } else
   puolueiden_aanet_postinumeroittain <- readRDS(file = "data/puolueiden_aanet_postinumeroittain.rds")
     
-if (!file.exists("data/ehdokkaiden_aanet_postinumeroittain.rds")) {
-  print("Lasketaan ehdokkaiden äänet postinumeroalueilla ja tallennetaan - kestää 1. kerralla n. minuutin!")
-  ehdokkaiden_aanet_postinumeroittain <- 
-    purrr::map(unique(ehdokkaat$vaalipiiri), .f=
-                 function(x) left_join(aanet, 
-                                       ehdokkaat,
-                                       by = c("ehdokasnumero", "vaalipiiri")) %>% 
-                 select(postinumero, 
-                        vaalipiiri, 
-                        ehdokasnumero,
-                        aanet = ehdokkaan_aanet_postinumeroalueella, 
-                        puolue) %>% 
-                 group_by(postinumero, ehdokasnumero, vaalipiiri) %>% 
-                 summarise(aanet = sum(aanet, na.rm=TRUE)) %>% 
-                 left_join(., kokonaisaanimaara_postinumeroittain, by="postinumero") %>% 
-                 filter(!is.na(postinumero) & vaalipiiri == x) %>% 
-                 left_join(., select(ehdokkaat, vaalipiiri, ehdokasnumero, sukunimi, etunimi, puolue), 
-                           by=c("ehdokasnumero","vaalipiiri")) %>% 
-                 as_tibble)
-  saveRDS(file = "data/ehdokkaiden_aanet_postinumeroittain.rds", ehdokkaiden_aanet_postinumeroittain)
-} else
-  ehdokkaiden_aanet_postinumeroittain <- readRDS(file = "data/ehdokkaiden_aanet_postinumeroittain.rds")
-
 paavodata <- paavo$data %>% 
   filter(vuosi == 2019, pono_level == 5) %>% 
   rename(postinumero = pono) %>% 

@@ -92,7 +92,7 @@ shinyServer(function(input, output, session) {
                                          weight = "he_vakiy",
                                          label = "Alue")) + 
           geom_smooth(method = "gam", 
-                      #formula = y ~ s(x, bs = "cs", k = 4),
+                      #formula = y ~ s(x, bs = "cs", k = 3),
                       formula = y ~ x, 
                       fullrange=FALSE, 
                       size= .25, 
