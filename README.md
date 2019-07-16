@@ -12,15 +12,15 @@ Huom: Rakennustietokannan lähdedatatiedosto ja sen osoite vaihtuu ajoittain. Sk
 
 # Painotus
 
-Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tiedostoon `aanestysalue2postinumero.rds`
+Painotus syntyy dataframeen `aanestysalue2postinumero`, josta tallentuu myös tiedostoon `w_aanestysalue2postinumero.rds` seuraavat kentät. 
 
 * kunta: kuntanumero
-* aanestysalue.nro: kunta + aanestysalue.nro on äänestysalueen uniikki tunnus
-* postinumero                  
-* rakennukset.aanestysalue.pono: asuin/toimistorakennukset äänestysalueen (kunta+aanestysalue.nro ja postinumeron leikkauksessa
-* rakennukset.aanestysalue: äänestysalueen (kunta+aanestysalue.nro) asuin/toimistorakennusten määrä 
-* rakennukset.pono: postinumeroalueen asuin/toimistorakennusten määrä
-* w.aanestysalue2pono: rakennukset.aanestysalue.pono / rakennukset.aanestysalue
+* aanestysalue_nro: (aanestysalue_nro, kunta) on äänestysalueen uniikki tunnus
+* aanestysalue_nimi 
+* postinumero 
+* w_aanestysalue2postinumero: rakennusten määrä äänestysalueen ja postinumeroalueen leikkauksessa / rakennuksten määrä äänestysalueella
+
+Dataframe `aanestysalue2postinumero` pitää sisällään enemmän kenttiä mm. rakennusten määriä ja alueiden keskipisteiden etäisyyksiä, joiden merkitys selvinnee paremmin tutustumalla skriptiin `main.Rmd`.
 
 # Käyttöesimerkkejä
 
@@ -30,7 +30,7 @@ Painotus syntyy dataframeen `aanestysalue2postinumero` joka tallentuu myös tied
   - `data_rakennukset.R`: hakee ja käsittelee rakennustiedot 
   - `data_EKV2019_aanet.R`: hakee ja käsittelee 2019 eduskuntavaalien tulokset
 
-Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`,`DT` ja `ggiraph` tarvitaan lisäksi `main.Rmd`:n visualisointi- ja taulukko-osuuksissa. 
+Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`, `DT`, `ggiraph`. `geosphere` ja `proj4`
 
 ## Shiny-sovellus
 

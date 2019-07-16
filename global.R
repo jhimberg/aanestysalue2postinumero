@@ -84,8 +84,7 @@ aanet_ja_paavodata <- left_join(paavodata,
 aanet_ja_paavodata <- mutate_at(aanet_ja_paavodata, .vars=vars(EOP:VIHR), .funs = list(osuus = ~ (./KAIKKI)))  %>%
   as_tibble
 
-aanet_ja_paavodata <- mutate(aanet_ja_paavodata, 
-                             vaestotiheys = he_vakiy/(pinta_ala/1e6))
+aanet_ja_paavodata <- mutate(aanet_ja_paavodata, vaestotiheys = he_vakiy/(pinta_ala/1e6))
 
 
 puoluenimet <- 
@@ -138,7 +137,6 @@ koodit <- koodit[ix]
 
 vaalipiirit <- seq(length(unique(ehdokkaat$vaalipiiri)))
 names(vaalipiirit)<-unique(ehdokkaat$vaalipiiri)
-
 
 
 
