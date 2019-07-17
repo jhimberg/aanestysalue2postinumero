@@ -1,6 +1,8 @@
 # aanestysalue2postinumero
 Äänestysalueittainen data postinumeroalueille avoimen rakennustiedon avulla. Postinumeroittaisen vaalien tulosdatan visualisointia.
 
+![Example 1](https://github.com/jhimberg/aanestysalue2postinumero/edit/master/README.md)
+
 # Heuristiikka
 
 R:llä toteutettu heuristiikka jolla voi arvioida äänten määriä postinumeroalueilla. Rakennustiedot löytyvät
