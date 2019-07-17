@@ -3,10 +3,10 @@
 print("Lataa rakennusdata...")
 
 
-# Rakennusdata löytyy https://www.avoindata.fi/data/fi/dataset/rakennusten-osoitetiedot-koko-suomi
-# CC BY 4.0 
-
-# Helmikuu 2019 kopio:
+# Viimeisin Väestörekisterikeskuksen avoin rakennustieto data löytyy 
+# https://www.avoindata.fi/data/fi/dataset/rakennusten-osoitetiedot-koko-suomi, lisenssi 
+# CC BY 4.0. Tässä on käytössä helmikuu datan 15.2. 2019 kopio haettu 1.3. 
+# https://www.avoindata.fi/data/fi/dataset/rakennusten-osoitetiedot-koko-suomi lisenssi CC BY 4.0
 
 if (!file.exists("data/suomi_osoitteet_2019-02-19.zip")) 
   download.file("http://datakerho.s3.amazonaws.com/suomi_osoitteet_2019-02-19.zip", 

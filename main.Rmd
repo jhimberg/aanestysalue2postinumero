@@ -40,7 +40,7 @@ Skripti ottaa käyttöön tarvittavia kirjastoja ja funktioita ja lataa tarvitta
 
 ```{r load_data, echo = FALSE}
 
-# seuraavia kirjastoja tarvitaan. Lisäksi: plyr, DT, proj4, geosphere
+# seuraavia kirjastoja tarvitaan. Lisäksi: plyr, DT, proj4, geosphere, (ggrepel)
 library(dplyr)
 library(stringr)
 library(readr) 
@@ -139,7 +139,9 @@ rakennukset <- filter(rakennukset, tilastointipostinumero) %>%
   select(-tilastointipostinumero) 
 ```
 
-Seuraavaksi lasketaan asuin/toimitilarakennusten määrä tilastointipostinumeroalueilla, äänestysalueilla ja näiden leikkauksissa. Liitetään alueiden nimitietoa ja keskimääräinen koordinaatti. Tätä käytetään poistamaan virheellisiä leikkauksia. 
+Seuraavaksi lasketaan asuin/toimitilarakennusten määrä tilastointipostinumeroalueilla, äänestysalueilla ja näiden leikkauksissa. Liitetään alueiden nimitietoa ja keskimääräinen koordinaatti. Tätä käytetään poistamaan virheellisiä leikkauksia. Postinumero- ja äänestysalueiden leikkaukset, jotka siirtävät ja tuovat enintään 0.5% alueen äänistä poistetaan. Tämä on keino poistaa suuri osa virheellisistä leikkauksia, joita syntyy kun muutaman rakennuksen postinumero on väärä. Lisäksi on laskettu leikkauksen summittaisen etäisyys postinumeroalueen keskipistekoordinaatteihin. (Tähän on käytetty `geoshpere` kirjastoa, jolle datojen koordinaatit on muunnettu `proj4` kirjastolla pituus- ja leveysasteiksi, toivottavasti tähän tehtävään riittävällä tarkkuudella.)
+
+Pelkästään etäisyyden perusteella leikkaamisen ongelma on se, että harvaan asutulla seudulla, esimerkiksi Lapissa, validit etäisydet ovat paljon suurempia kuin tiheästi asutuilla seuduilla. Tässä poistuu oikein olevia rakennuksiakin, mutta vaikutus ääniin on varmaankin vähäisempi kuin muut menetelmän epätarkkuudet. 
 
 ```{r Ns, echo=FALSE}
 
@@ -189,10 +191,6 @@ aanestysalue2postinumero$pono_leikkaus_km =
                      select(aanestysalue2postinumero, postinumero_lon, postinumero_lat)) / 1000
 
 ```
-
-Postinumero- ja äänestysalueiden leikkaukset, jotka siirtävät ja tuovat enintään 0.5% alueen äänistä poistetaan. Tämä on keino poistaa suuri osa virheellisistä leikkauksia, joita syntyy kun muutaman rakennuksen postinumero on väärä. Lisäksi on laskettu leikkauksen summittaisen etäisyys postinumeroalueen keskipistekoordinaatteihin. (Tähän on käytetty `geoshpere` kirjastoa, jolle datojen koordinaatit on muunnettu `proj4` kirjastolla pituus- ja leveysasteiksi, toivottavasti tähän tehtävään riittävällä tarkkuudella.)
-
-Pelkästään etäisyyden perusteella leikkaamisen ongelma on se, että harvaan asutulla seudulla, esimerkiksi Lapissa, validit etäisydet ovat paljon suurempia kuin tiheästi asutuilla seuduilla. Tässä poistuu oikein olevia rakennuksiakin, mutta vaikutus ääniin on varmaankin vähäisempi kuin muut menetelmän epätarkkuudet. 
 
 Lasketaan kertoimet:   
       
@@ -338,7 +336,7 @@ puolueiden_aanet_postinumeroittain <-
             by="postinumero") %>% 
   spread(puolue, aanet, fill=0) %>% 
    filter(!is.na(postinumero)) %>% 
-  ungroup %>% 
+  ungroup 
   
 puolueiden_nimet <- names(select(puolueiden_aanet_postinumeroittain, EOP:VIHR))
 
@@ -373,8 +371,7 @@ Taulukossa sarake "KAIKKI" on postinumeroalueen estimoitu äänimäärä, puolue
 
 ### Paavo-data
 
-Tilastokeskuksen Paavo-data (https://www.stat.fi/tup/paavo/index_en.html) on haettu valmiiksi vuosilta 2018-2019 (ks. https://github.com/jhimberg/paavodata). 
-Datassa on myös laskettuna aggregaatteja kolmen ja kahden ensimmäinsen numeron määrittämille suuremmille alueille `pono_level`, mutta tässä otetaan postinumeroalueet (kaikki viisi numeroa) Paavo-datasta (versio 2019) ja yhdistetään se puolueiden äänimääriin.
+Tilastokeskuksen Paavo-data (https://www.stat.fi/tup/paavo/index_en.html) on haettu valmiiksi vuosilta 2018-2019 (ks. https://github.com/jhimberg/paavodata). Datassa on myös laskettuna aggregaatteja kolmen ja kahden ensimmäinsen numeron määrittämille suuremmille alueille `pono_level`, mutta tässä otetaan postinumeroalueet (kaikki viisi numeroa) Paavo-datasta (versio 2019) ja yhdistetään se puolueiden äänimääriin.
 
 Taulukossa Paavo-datan muuttujien koodeja vastaavat nimet löytyvät `paavo$vars` Ks. tarkemmin https://github.com/jhimberg/paavodata.  
 
@@ -402,32 +399,28 @@ DT::datatable(paavo$vars, rownames=FALSE)
 
 #### Helsingin postinumeroalueet
 
-Puolueen ääniosuuden ja korkeimman tuloluokan osuuden suhde alueella. 
+Puolueen ääniosuuden ja yksinasuvien nuorten osuuden suhde alueella.  Esimerkissä VIHR / KAIKKI on vihreiden ääniosuus kaikista alueen äänistä. (Osuudet ovat välillä 0...1, eli 1 vastaa 100%).
 
 ```{r scatterplot}
-postinumero_pattern <- "^00" # Helsinki
-paavo_selittaja <- "hr_hy_tul_osuus"
-selitettava <- "KOK / KAIKKI"
+postinumero_pattern <- "^00"  # 00 ~ Helsinki
+selittaja <- "te_nuor_osuus"
+selitettava <- "VIHR / KAIKKI"
 alueen_minimiaanimaara <- 100
-outlier <- c()
-
-#outlier <- c("02150")
 
 ggplot(
-  filter(aanet_ja_paavodata, 
-         grepl(postinumero_pattern, postinumero) & KAIKKI >= alueen_minimiaanimaara & !(postinumero %in% outlier )), 
-  aes_string(y = selitettava, 
-      x = paavo_selittaja, 
+  filter(aanet_ja_paavodata, grepl(postinumero_pattern, postinumero) & KAIKKI >= alueen_minimiaanimaara), 
+  aes_string(y = selitettava, x = selittaja, 
       label = "postinumero", 
       weight = "KAIKKI" 
-      #size = "KAIKKI"
       )) +
-  geom_text(size=3) + 
-  geom_smooth(method = "gam", formula = y ~ s(x, bs="cs", k = 3)) + 
-  xlab(paste(filter(paavo$vars, koodi == paavo_selittaja) %>% pull(nimi), "\n(aluesuodatus=", postinumero_pattern, ")"))
+  # geom_text(size=4) +  vaihtoehto ilman ggrepel-kirjastoa
+  geom_point() + ggrepel::geom_text_repel(size=4) + # vaihtoehto jossa labelit ei mene päällekäin...
+  ylab(selitettava) +
+  xlab(paste(filter(paavo$vars, koodi == selittaja) %>% pull(nimi), "\n(aluesuodatus=", postinumero_pattern, ")"))
+
 ```
 
-### Karttakuvia
+### Karttakuvia 
 
 Paavo-datan yhteydessä on myös postinumeroalueiden karttapohja. Sen resoluutiota on pienennetty. Pienimpiä saaria on poistettu ja polygonien pisteiden määrää on vähennetty.
 

@@ -7,10 +7,11 @@ shinyServer(function(input, output, session) {
         DT::datatable(puolueiden_aanet_postinumeroittain %>% 
                           mutate_at(., vars(EOP:VIHR), .funs = ~round((. / KAIKKI), 5)) %>% 
                           mutate_at(., vars(KAIKKI), round) %>% 
-                          left_join(postinumerot, by="postinumero") %>%
+                          left_join(postinumerot, by="postinumero") %>% 
+                          select(-postinumero_x, -postinumero_y, -kuntanimi_postinumero,-vuosi) %>% 
                           mutate(kunta = kuntano2nimi(kuntano)) %>%  
                           select(-kuntano) %>%
-                          order_columns(first_names = c("kunta", "postinumero", "nimi")),
+                          order_columns(first_names = c("kunta", "postinumero", "postinumero_nimi")),
                       colnames = c('Ääniä' = 'KAIKKI'),
                       caption = "Karkea arvio äänistä puolueittain ja postinumeroalueittain",
                       selection = "none",
