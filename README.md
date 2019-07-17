@@ -1,17 +1,17 @@
 # aanestysalue2postinumero
-Äänestysalueittainen data postinumeroalueille avoimen rakennustiedon avulla. Postinumeroittaisen vaalien tulosdatan visualisointia.
+Äänestysalueittainen datan estimointia postinumeroalueittain avoimen rakennustiedon avulla. Postinumeroittaisen vaalien tulosdatan visualisointia.
 
-![Example 1](https://github.com/jhimberg/aanestysalue2postinumero/blob/master/map_and_names/example1.png)
+![Example 1](https://github.com/jhimberg/aanestysalue2postinumero/blob/master/map_and_names/example1.png | width = 100)
 ![Example 2](https://github.com/jhimberg/aanestysalue2postinumero/blob/master/map_and_names/example2.png)
 
 # Heuristiikka
 
 R:llä toteutettu heuristiikka jolla voi arvioida äänten määriä postinumeroalueilla. Rakennustiedot löytyvät
-https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi, joissa rakennuksista on tiedossa sekä postinumero että äänestysalue. Rajoitutaan asuin- ja toimistorakennuksiin. Avoimessa datassa ei ole tämän tarkempaa tietoa rakennuksien laadusta tai koosta. Lasketaan kullekin Paavo-aineiston tilastointipostinumerolle osuudet sen rakennuksista eri äänestysalueilla. Näillä voi laskea postinumeroalueen äänimäärän äänestysalueiden painotettuna summana. 
+https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi, joissa rakennuksista on tiedossa sekä postinumero että äänestysalue. Rajoitutaan asuin- ja toimistorakennuksiin. Avoimessa datassa ei ole tämän tarkempaa tietoa rakennuksien laadusta tai koosta. Lasketaan kullekin Paavo-aineiston tilastointipostinumerolle osuudet sen rakennuksista eri äänestysalueilla. Näillä voi _karkeasti arvioida_ postinumeroalueen äänimääriä äänestysalueiden painotettuna summana. 
 
 Rakennustiedoissa on rakennuksia postinumeroilla, joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
 
-Huom: Rakennustietokannan lähdedatatiedosto ja sen osoite vaihtuu ajoittain. Skripteissä on tällä hetkellä käytössä AWS S3 -kansioon kopioitu versio 19.2. 2019, jotta käytössä olisi eduskuntavaaleja 2019 oleva tieto. (Rakennusten osoitetiedot ja äänestysalue - koko Suomi by Väestörekisterikeskus is licensed under a Creative Commons Attribution 4.0 International License)
+Huom: Rakennustietokannan lähdedatatiedosto ja sen osoite vaihtuu ajoittain. Skripteissä on tällä hetkellä käytössä versio 19.2. 2019, jotta käytössä olisi eduskuntavaaleja 2019 oleva tieto. (Rakennusten osoitetiedot ja äänestysalue - koko Suomi by Väestörekisterikeskus is licensed under a Creative Commons Attribution 4.0 International License)
 
 # Painotus
 
