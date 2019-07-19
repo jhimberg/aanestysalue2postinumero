@@ -8,7 +8,7 @@
 R:llä toteutettu heuristiikka, jolla voi arvioida äänten määriä postinumeroalueilla. Rakennustiedot löytyvät
 https://www.avoindata.fi/data/en/dataset/rakennusten-osoitetiedot-koko-suomi, joissa rakennuksista on tiedossa sekä postinumero että äänestysalue. Rajoitutaan asuin- ja toimistorakennuksiin. Avoimessa datassa ei ole tämän tarkempaa tietoa rakennuksien laadusta tai koosta. Lasketaan kullekin Paavo-aineiston tilastointipostinumerolle osuudet sen rakennuksista eri äänestysalueilla. Heuristiikassa on luonnollisesti lukuisia virhelähteitä; sillä voi _arvioida_ postinumeroalueen äänimääriä äänestysalueiden painotettuna summana. Rakennustiedoissa on rakennuksia postinumeroilla, joita ei ole yleensä tilastokäytössä ja nämä on yksinkertaisesti jätetty pois. Jotkin äänestysalueet (esim. ulkosuomalaiset) jäävät tässä toki myös pois. 
 
-Tarkemmin heuristiikasta itse skriptissä `main.Rmd`. Esimerkkiajo <a href="https://github.com/jhimberg/aanestysalue2postinumero/blob/master/pics/example_run.html"> linkki <a/>
+Tarkemmin heuristiikasta itse skriptissä `main.Rmd`.
 
 Huom: Rakennustietokannan lähdedatatiedosto ja sen osoite vaihtuu ajoittain. Skripteissä on tällä hetkellä käytössä versio 19.2. 2019, jotta käytössä olisi eduskuntavaaleja 2019 oleva tieto. (Rakennusten osoitetiedot ja äänestysalue - koko Suomi by Väestörekisterikeskus is licensed under a Creative Commons Attribution 4.0 International License)
 
