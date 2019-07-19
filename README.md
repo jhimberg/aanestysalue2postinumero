@@ -1,7 +1,7 @@
 # aanestysalue2postinumero
 Äänestysalueittainen datan estimointia postinumeroalueittain avoimen rakennustiedon avulla. Postinumeroittaisen vaalien tulosdatan visualisointia.
 
-<img src="https://github.com/jhimberg/aanestysalue2postinumero/blob/master/map_and_names/example1.png" width = 350 /> <img src="https://github.com/jhimberg/aanestysalue2postinumero/blob/master/map_and_names/example2.png" width = 350 />
+<img src="https://github.com/jhimberg/aanestysalue2postinumero/blob/master/pics/example1.png" width = 350 /> <img src="https://github.com/jhimberg/aanestysalue2postinumero/blob/master/pics/example2.png" width = 350 />
 
 # Heuristiikka
 
