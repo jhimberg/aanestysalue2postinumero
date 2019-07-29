@@ -77,6 +77,18 @@ shinyServer(function(input, output, session) {
       xscale <- reactive({if (input$xscale == "lineaarinen") scale_x_continuous() else scale_x_log10()})
       yscale <- reactive({if (input$yscale == "lineaarinen") scale_y_continuous() else scale_y_log10()}) 
     
+      regression_f <-   function(regression_formula = y ~ x) geom_smooth(method = "gam", 
+                                    formula = regression_formula, 
+                                    fullrange = FALSE, 
+                                    size = .25, 
+                                    color = "gray",
+                                    linetype = NA) 
+      
+      regression <- reactive({switch(input$sovite, 
+                                     "-" = NULL, 
+                                     "y~x" = regression_f())
+      })
+      
       output$XYZ <- plotly::renderPlotly({
         p <- ggplot(data = aanet_ja_paavodata %>% 
                       filter(grepl(paste0("^",input$alue_graafi), postinumero) &
@@ -92,13 +104,7 @@ shinyServer(function(input, output, session) {
                                          size = "he_vakiy",
                                          weight = "he_vakiy",
                                          label = "Alue")) + 
-          geom_smooth(method = "gam", 
-                      #formula = y ~ s(x, bs = "cs", k = 3),
-                      formula = y ~ x, 
-                      fullrange=FALSE, 
-                      size= .25, 
-                      color="gray",
-                      linetype=NA)  + 
+          regression() + 
           geom_point(na.rm = TRUE) + 
           theme_minimal() + 
           xscale() + 

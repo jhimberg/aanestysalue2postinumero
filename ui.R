@@ -38,7 +38,8 @@ shinyUI(
               choices = c("lineaarinen", "log10"),
               inline = TRUE
             ),
-            selectInput("muuttuja_z", "Väri:", koodit, selected = "vaestotiheys")
+            selectInput("muuttuja_z", "Väri:", koodit, selected = "vaestotiheys"),      
+            selectInput("sovite", "Sovita:", c("ei mitään" = "-", "suora" = "y~x"), selected = "-")
           ),
           wellPanel(tags$em(
             "Huom: Osuudet välillä 0...1, jossa 1 vastaa 100%"

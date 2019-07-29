@@ -75,6 +75,7 @@ Tuloksena dataframe `aanestysalue2postinumero`.
 
 Haetaan Paavo-datassa tilastointikäytössä olevat postinumerot, niiden pääasiallinen kunta ja alueen nimi. Tässä esimerkissä käyetään vuoden 2019 Paavo-datan postinumeroita. Datan käsittelystä enemmän (Alkuperäinen data Tilastokeskuksen Paavo-data, ref. 23.4. 2019, lisenssi: CC BY 4.0  https://creativecommons.org/licenses/by/4.0/deed.en 
 
+
 ``` {r load_rakennusdata, echo = FALSE}
 tilastointipostinumerot <- readRDS("map_and_names/paavodata.rds")$data %>% 
   transmute(vuosi, 
@@ -343,6 +344,7 @@ puolueiden_nimet <- names(select(puolueiden_aanet_postinumeroittain, EOP:VIHR))
 ```
  
 ``` {r table2, echo = FALSE}
+
 DT::datatable(puolueiden_aanet_postinumeroittain %>% 
                           mutate_at(., vars(EOP:VIHR), .funs = ~ round((. / KAIKKI), 5)) %>% 
                           mutate_at(., vars(KAIKKI), round, 1) %>% 
