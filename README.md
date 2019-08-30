@@ -34,7 +34,7 @@ Dataframe `aanestysalue2postinumero` pitää sisällään enemmän kenttiä mm. 
   - `data_rakennukset.R`: hakee ja käsittelee rakennustiedot 
   - `data_EKV2019_aanet.R`: hakee ja käsittelee 2019 eduskuntavaalien tulokset
 
-Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`. `ggplot2`, `DT`, `ggiraph`. `geosphere` ja `proj4`
+Ainakin seuraavat R-paketit tarvitaan: `plyr`, `dplyr`, `tidyr`, `readr`, `stringr`, `ggplot2`, `DT`, `ggiraph`, `geosphere` ja `proj4`
 
 ## Shiny-sovellus
 
